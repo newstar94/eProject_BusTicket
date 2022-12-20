@@ -1,0 +1,161 @@
+﻿@model eProject_BusTicket.ViewModels.BookingVM
+
+@{
+    ViewBag.Title = "Booking";
+}
+
+<h2>Booking</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <h4>Booking</h4>
+    <div class="form-horizontal">
+
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.TripDetails.Destination.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TripDetails.Origin.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TripDetails.Vehicle.TypeofVehicle.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TripDetails.Vehicle.Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TripDetails.DepartureTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TripDetails.TripTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TripDetails.Distance)
+                </th>
+                <th>
+                    Temporary Price
+                </th>
+                <th>
+                    Amount
+                </th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => model.TripDetails.Destination.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.TripDetails.Origin.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.TripDetails.Vehicle.TypeofVehicle.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.TripDetails.Vehicle.Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.TripDetails.DepartureTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.TripDetails.TripTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.TripDetails.Distance)
+                </td>
+                <td id="tempprice">
+                    @Html.DisplayFor(model => model.TripDetails.Price)
+                </td>
+                <td id="aviableseats" style="display: none">
+                    @Html.DisplayFor(model => model.TripDetails.AvailableSeat)
+                </td>
+                <td>
+                    <input type="number" id="seats" onchange="addinfor()" />
+                </td>
+            </tr>
+        </table>
+        <table class="table" id="ticket" style="display: none">
+            <tr>
+                <th>
+                    Passenger Name
+                </th>
+                <th>
+                    Age
+                </th>
+                <th>
+                    Price
+                </th>
+            </tr>
+            <tfoot>
+            <td colspan="1"></td>
+            <td><b>Total:</b></td>
+            <td id="total">
+                
+            </td>
+            </tfoot>
+        </table>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input id="create" type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function addinfor() {
+        var ticket = document.getElementById('ticket');
+        var numRows = document.getElementById('seats').value;
+        document.getElementById("total").innerHTML = "";
+        var oldnumRows = ticket.rows.length - 1;
+        if (numRows>0) {
+            ticket.style.display = 'table';
+        } else {
+            ticket.style.display = 'none';
+        }
+        // Delete each row starting from the last one
+        for (let i = oldnumRows-1; i >= 1; i--) {
+            ticket.deleteRow(i);
+        }
+        for (let i = 0; i < numRows; i++) {
+            var row = ticket.insertRow(1);
+            var nameCell = row.insertCell(0);
+            var ageCell = row.insertCell(1);
+            var priceCell = row.insertCell(2);
+            nameCell.innerHTML = '<input type="text" name="Name" placeholder="Passenger Name">';
+            ageCell.innerHTML = '<input type="number" placeholder="Age" class="age" onchange="caculateprice(this)">';
+            priceCell.innerHTML = '<div class="price"></div>';
+        }
+    }
+
+    function caculateprice(i) {
+        var row = i.parentNode.parentNode;
+        var ageCell = row.querySelector(".age");
+        var age = ageCell.value;
+        var tempprice = document.getElementById("tempprice").innerText.replace(".", "");
+        console.log(tempprice);
+        if (age < 6) {
+            var price = tempprice * 0;
+        } else if (age < 12) {
+            var price = tempprice * 0.5;
+        } else if (age > 50) {
+            var price = tempprice * 0.7;
+        } else {
+            var price = tempprice * 1;
+        }
+        price = price.toLocaleString("vi-VN");
+        row.querySelector(".price").innerHTML = price;
+        var total = 0;
+        var cells = document.querySelectorAll(".price");
+        for (var i = 0; i < cells.length; i++) {
+            if (cells[i].textContent!="") {
+                var number = parseInt(cells[i].textContent.replace(".", ""));
+                total += number;
+            }
+        }
+        total = total.toLocaleString("vi-VN");
+        document.getElementById("total").innerHTML = total;
+    }
+
+</script>

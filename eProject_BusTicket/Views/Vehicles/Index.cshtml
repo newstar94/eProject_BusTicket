@@ -1,0 +1,58 @@
+﻿@model IEnumerable<eProject_BusTicket.Data.Vehicle>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TypeofVehicle.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Seats)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Code)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr id="row_@item.VehicleID">
+            <td>
+                @Html.DisplayFor(modelItem => item.TypeofVehicle.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Seats)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.VehicleID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.VehicleID }) |
+                @Ajax.ActionLink("Delete", "Delete", new { id = item.VehicleID }, new AjaxOptions
+           {
+               Confirm = "Are you sure to delete " + @item.Code + "?",
+               OnComplete = "$('#row_" + @item.VehicleID + "').remove()",
+               HttpMethod = "Post"
+           })
+                @*@Html.ActionLink("Delete", "Delete", new { id=item.VehicleID })*@
+            </td>
+        </tr>
+    }
+
+</table>

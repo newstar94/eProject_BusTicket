@@ -1,0 +1,87 @@
+﻿@model IEnumerable<eProject_BusTicket.Models.Trip>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Destination.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Origin.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vehicle.TypeofVehicle.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vehicle.Code)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DepartureTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TripTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Distance)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AvailableSeat)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr id="row_@item.TripID">
+        <td>
+            @Html.DisplayFor(modelItem => item.Destination.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Origin.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Vehicle.TypeofVehicle.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Vehicle.Code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DepartureTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TripTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Distance)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AvailableSeat)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.TripID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.TripID }) |
+            @Ajax.ActionLink("Delete", "Delete", new { id = item.TripID }, new AjaxOptions
+            {
+                Confirm = "Are you sure to delete " + @item.TripID + "?",
+                OnComplete = "$('#row_" + @item.TripID + "').remove()",
+                HttpMethod = "Post"
+            }) |
+            @Html.ActionLink("Select","Index", "Bookings", new { id = item.TripID },"")
+        </td>
+    </tr>
+}
+
+</table>
