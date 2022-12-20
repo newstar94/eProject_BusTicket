@@ -15,7 +15,6 @@ namespace eProject_BusTicket.Models
         public int BookingID { get; set; }
         public virtual Booking Booking { get; set; }
         public decimal Price { get; set; }
-        public DateTime Date { get; set; }
         public string PassengerName { get; set; }
         public int PassengerAge { get; set; }
         public TicketStatus Status { get; set; }

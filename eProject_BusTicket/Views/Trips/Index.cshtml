@@ -79,7 +79,7 @@
                 OnComplete = "$('#row_" + @item.TripID + "').remove()",
                 HttpMethod = "Post"
             }) |
-            @Html.ActionLink("Select","Index", "Bookings", new { id = item.TripID },"")
+            @Html.ActionLink("Select","Booking", "Bookings", new { id = item.TripID },"")
         </td>
     </tr>
 }

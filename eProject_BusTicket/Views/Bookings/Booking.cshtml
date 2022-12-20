@@ -92,7 +92,6 @@
             <td colspan="1"></td>
             <td><b>Total:</b></td>
             <td id="total">
-                
             </td>
             </tfoot>
         </table>
@@ -123,15 +122,15 @@
             var nameCell = row.insertCell(0);
             var ageCell = row.insertCell(1);
             var priceCell = row.insertCell(2);
-            nameCell.innerHTML = '<input type="text" name="Name" placeholder="Passenger Name">';
-            ageCell.innerHTML = '<input type="number" placeholder="Age" class="age" onchange="caculateprice(this)">';
+            nameCell.innerHTML = '<input type="text" name="PassengerName" placeholder="Passenger Name">';
+            ageCell.innerHTML = '<input type="number" name="PassengerAge" placeholder="Age" class="PassengerAge" onchange="caculateprice(this)">';
             priceCell.innerHTML = '<div class="price"></div>';
         }
     }
 
     function caculateprice(i) {
         var row = i.parentNode.parentNode;
-        var ageCell = row.querySelector(".age");
+        var ageCell = row.querySelector(".PassengerAge");
         var age = ageCell.value;
         var tempprice = document.getElementById("tempprice").innerText.replace(".", "");
         console.log(tempprice);

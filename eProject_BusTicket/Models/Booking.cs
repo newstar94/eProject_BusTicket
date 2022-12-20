@@ -9,9 +9,7 @@ namespace eProject_BusTicket.Models
     {
         public int BookingID { get; set; }
         public decimal TotalPayment { get; set; }
-        public bool TypeofPayment { get; set; }
         public DateTime DateTime { get; set; }
-        public bool Status { get; set; }
         public ICollection<BookingTicket> BookingTickets { get; set; }
     }
 }

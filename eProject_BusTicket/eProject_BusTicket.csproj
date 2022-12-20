@@ -202,7 +202,8 @@
     <Content Include="Views\Trips\Details.cshtml" />
     <Content Include="Views\Trips\Edit.cshtml" />
     <Content Include="Views\Trips\Index.cshtml" />
-    <Content Include="Views\Bookings\Index.cshtml" />
+    <Content Include="Views\Bookings\Booking.cshtml" />
+    <Content Include="Views\Bookings\Payment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
