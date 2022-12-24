@@ -23,5 +23,6 @@ namespace eProject_BusTicket.Data
         public DbSet<Station> Stations { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingTicket> BookingsTickets { get; set; }
+        public DbSet<Account> Accounts { get; set; }
     }
 }

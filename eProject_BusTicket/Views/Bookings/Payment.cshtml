@@ -66,7 +66,7 @@
                         @Model.ToList()[i].RouteDetails.DepartureTime
                     </td>
                     <td>
-                        @Model.ToList()[i].RouteDetails.Route.Price
+                        @Model.ToList()[i].RouteDetails.Route.Price.ToString("N0")
                     </td>
                     <td>
                         @Model.Count()
@@ -126,7 +126,7 @@
         var cells = document.querySelectorAll(".price");
         for (var i = 0; i < cells.length; i++) {
             if (cells[i].textContent != "") {
-                var number = parseInt(cells[i].textContent.replace(".", ""));
+                var number = parseInt(cells[i].textContent.replaceAll(".", ""));
                 total += number;
             }
         }

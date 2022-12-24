@@ -100,10 +100,10 @@
                 @Html.DisplayFor(modelItem => item.DepartureTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Route.Distance)
+                @Html.DisplayFor(modelItem => item.Route.Distance) km
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Route.Duration)
+                @Html.DisplayFor(modelItem => item.Route.Duration) phút
             </td>
             <td>
                 @Html.ActionLink("Select", "Booking", "Bookings", new { id = item.RouteScheduleID }, "")

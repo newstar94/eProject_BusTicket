@@ -119,7 +119,7 @@ namespace eProject_BusTicket.Controllers
                     }
                 }
 
-                return RedirectToAction("Index");
+                return Json(Url.Action("Index"));
             }
             ViewBag.VehicleID = new SelectList(db.Vehicles.Where(v => v.IsActive == true), "VehicleID", "Code", tripvm.Trip.VehicleID);
             return View(tripvm);

@@ -84,6 +84,8 @@
                 </td>
             </tr>
         </table>
+
+
         <table class="table" id="ticket" style="display: none">
             <tr>
                 <th>
@@ -106,6 +108,11 @@
 
             </tfoot>
         </table>
+
+        <input name="Name" value="@ViewBag.Name" />
+        <input name="Email" value="@ViewBag.Email" />
+        <input name="PhoneNumber" value="@ViewBag.PhoneNumber" />
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input id="create" type="submit" value="Create" class="btn btn-default" />
@@ -143,7 +150,7 @@
         var row = i.parentNode.parentNode;
         var ageCell = row.querySelector(".PassengerAge");
         var age = ageCell.value;
-        var tempprice = document.getElementById("tempprice").innerText.replace(".", "");
+        var tempprice = document.getElementById("tempprice").innerText.replaceAll(".", "");
         console.log(tempprice);
         if (age < 6) {
             var price = tempprice * 0;
@@ -160,7 +167,7 @@
         var cells = document.querySelectorAll(".price");
         for (var i = 0; i < cells.length; i++) {
             if (cells[i].textContent != "") {
-                var number = parseInt(cells[i].textContent.replace(".", ""));
+                var number = parseInt(cells[i].textContent.replaceAll(".", ""));
                 total += number;
             }
         }

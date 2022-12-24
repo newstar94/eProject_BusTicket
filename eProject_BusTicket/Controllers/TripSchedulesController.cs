@@ -75,6 +75,8 @@ namespace eProject_BusTicket.Controllers
             if (ModelState.IsValid)
             {
                 tripSchedule.IsActive = true;
+                var trip = db.Trips.Find(tripSchedule.TripID);
+                tripSchedule.TripScheduleCode= trip.CodeName+tripSchedule.DepartureTime.ToString("ddMMyyyyHHmm");
                 db.TripSchedules.Add(tripSchedule);
                 db.SaveChanges();
                 var routes = db.Routes.Where(r => r.TripID == tripSchedule.TripID).ToList();
@@ -104,6 +106,7 @@ namespace eProject_BusTicket.Controllers
                     routeSchedule.TripScheduleID = tripSchedule.TripScheduleID;
                     routeSchedule.RouteID = routes[i].RouteID;
                     routeSchedule.Route = routes[i];
+                    routeSchedule.RouteScheduleCode = tripSchedule.TripScheduleCode + i;
                     routeSchedule.AvaiableSeat = routes[i].AvaiableSeats;
                     if (routes[i].StartID == stations[0].StationID)
                     {

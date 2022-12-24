@@ -10,6 +10,7 @@ namespace eProject_BusTicket.Models
     {
         public int RouteScheduleID { get; set; }
         public int TripScheduleID { get; set; }
+        public string RouteScheduleCode { get; set; }
         public int RouteID { get; set; }
         public virtual Route Route { get; set; }
         [Display(Name = "Số ghế trống")]

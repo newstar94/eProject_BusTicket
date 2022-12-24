@@ -9,6 +9,7 @@ namespace eProject_BusTicket.Models
     public class TripSchedule
     {
         public int TripScheduleID { get; set; }
+        public string TripScheduleCode { get; set; }
         public int TripID { get; set; }
         public virtual Trip Trip { get; set; }
         public bool IsActive { get; set; }
