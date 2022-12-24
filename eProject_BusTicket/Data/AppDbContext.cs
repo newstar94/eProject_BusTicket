@@ -15,9 +15,12 @@ namespace eProject_BusTicket.Data
         }
         public DbSet<TypeofVehicle> TypeofVehicles { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
-        public DbSet<Origin> Origins { get; set; }
-        public DbSet<Destination> Destinations { get; set; }
+        public DbSet<Location> Locations { get; set; }
         public DbSet<Trip> Trips { get; set; }
+        public DbSet<TripSchedule> TripSchedules { get; set; }
+        public DbSet<Route> Routes { get; set; }
+        public DbSet<RouteSchedule> RouteSchedules { get; set; }
+        public DbSet<Station> Stations { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingTicket> BookingsTickets { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<eProject_BusTicket.Models.Trip>
+﻿@model IEnumerable<eProject_BusTicket.ViewModels.TripVM>
 
 @{
     ViewBag.Title = "Index";
@@ -12,76 +12,69 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Destination.Name)
+            @Html.DisplayNameFor(model => model.Trip.Vehicle.TypeofVehicle.Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Origin.Name)
+            @Html.DisplayNameFor(model => model.Trip.Vehicle.Code)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Vehicle.TypeofVehicle.Name)
+            @Html.DisplayNameFor(model => model.Trip.CodeName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Vehicle.Code)
+            @Html.DisplayNameFor(model => model.Trip.Origin)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DepartureTime)
+            @Html.DisplayNameFor(model => model.Trip.Destination)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TripTime)
+            Chiều dài chuyến
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Distance)
+            Tổng thời gian chuyến
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Price)
+            Số điểm đón/trả khách
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.AvailableSeat)
+            @Html.DisplayNameFor(model => model.Trip.IsActive)
         </th>
         <th></th>
     </tr>
-
-@foreach (var item in Model) {
-    <tr id="row_@item.TripID">
-        <td>
-            @Html.DisplayFor(modelItem => item.Destination.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Origin.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Vehicle.TypeofVehicle.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Vehicle.Code)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DepartureTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TripTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Distance)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AvailableSeat)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.TripID }) |
-            @Html.ActionLink("Details", "Details", new { id = item.TripID }) |
-            @Ajax.ActionLink("Delete", "Delete", new { id = item.TripID }, new AjaxOptions
-            {
-                Confirm = "Are you sure to delete " + @item.TripID + "?",
-                OnComplete = "$('#row_" + @item.TripID + "').remove()",
-                HttpMethod = "Post"
-            }) |
-            @Html.ActionLink("Select","Booking", "Bookings", new { id = item.TripID },"")
-        </td>
-    </tr>
-}
-
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Trip.Vehicle.TypeofVehicle.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Trip.Vehicle.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Trip.CodeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Trip.Origin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Trip.Destination)
+            </td>
+            <td>
+                @item.Routes.Max(r=>r.Distance) km
+            </td>
+            <td>
+                @item.Routes.Max(r=>r.Duration) phút
+            </td>
+            <td>
+                @item.Stations.Count()
+            </td>
+            <td>
+                @(item.Trip.IsActive ? "Hoạt động" : "Tạm ngưng")
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Trip.TripID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Trip.TripID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Trip.TripID })
+            </td>
+        </tr>
+    }
 </table>

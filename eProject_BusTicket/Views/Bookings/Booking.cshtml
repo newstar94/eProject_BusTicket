@@ -15,29 +15,33 @@
         <table class="table">
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Destination.Name)
+                    @Html.DisplayNameFor(model => model.TripDetails.Trip.Vehicle.TypeofVehicle.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Origin.Name)
+                    @Html.DisplayNameFor(model => model.TripDetails.Trip.Vehicle.Code)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Vehicle.TypeofVehicle.Name)
+                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Start)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Vehicle.Code)
+                    @Html.DisplayNameFor(model => model.RouteDetails.Route.End)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.DepartureTime)
+                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Distance)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.TripTime)
+                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Duration)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Distance)
+                    @Html.DisplayNameFor(model => model.RouteDetails.DepartureTime)
                 </th>
                 <th>
-                    Temporary Price
+                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Price)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RouteDetails.AvaiableSeat)
+                </th>
+
                 <th>
                     Amount
                 </th>
@@ -45,31 +49,35 @@
             </tr>
             <tr>
                 <td>
-                    @Html.DisplayFor(model => model.TripDetails.Destination.Name)
+                    @Html.DisplayFor(model => model.TripDetails.Trip.Vehicle.TypeofVehicle.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => model.TripDetails.Origin.Name)
+                    @Html.DisplayFor(model => model.TripDetails.Trip.Vehicle.Code)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => model.TripDetails.Vehicle.TypeofVehicle.Name)
+                    @Html.DisplayFor(model => model.RouteDetails.Route.Start)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => model.TripDetails.Vehicle.Code)
+                    @Html.DisplayFor(model => model.RouteDetails.Route.End)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => model.TripDetails.DepartureTime)
+                    @Html.DisplayFor(model => model.RouteDetails.Route.Distance)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => model.TripDetails.TripTime)
+                    @Html.DisplayFor(model => model.RouteDetails.Route.Distance)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => model.TripDetails.Distance)
+                    @Html.DisplayFor(model => model.RouteDetails.DepartureTime)
                 </td>
                 <td id="tempprice">
-                    @Html.DisplayFor(model => model.TripDetails.Price)
+                    @Html.DisplayFor(model => model.RouteDetails.Route.Price)
                 </td>
+                <td>
+                    @Html.DisplayFor(model => model.RouteDetails.AvaiableSeat)
+                </td>
+
                 <td id="aviableseats" style="display: none">
-                    @Html.DisplayFor(model => model.TripDetails.AvailableSeat)
+                    @Html.DisplayFor(model => model.RouteDetails.AvaiableSeat)
                 </td>
                 <td>
                     <input type="number" id="seats" onchange="addinfor()" />
@@ -89,10 +97,13 @@
                 </th>
             </tr>
             <tfoot>
-            <td colspan="1"></td>
-            <td><b>Total:</b></td>
-            <td id="total">
-            </td>
+                <tr>
+                    <td colspan="1"></td>
+                    <td><b>Total:</b></td>
+                    <td id="total">
+                    </td>
+                </tr>
+
             </tfoot>
         </table>
         <div class="form-group">
@@ -108,13 +119,13 @@
         var numRows = document.getElementById('seats').value;
         document.getElementById("total").innerHTML = "";
         var oldnumRows = ticket.rows.length - 1;
-        if (numRows>0) {
+        if (numRows > 0) {
             ticket.style.display = 'table';
         } else {
             ticket.style.display = 'none';
         }
         // Delete each row starting from the last one
-        for (let i = oldnumRows-1; i >= 1; i--) {
+        for (let i = oldnumRows - 1; i >= 1; i--) {
             ticket.deleteRow(i);
         }
         for (let i = 0; i < numRows; i++) {
@@ -148,7 +159,7 @@
         var total = 0;
         var cells = document.querySelectorAll(".price");
         for (var i = 0; i < cells.length; i++) {
-            if (cells[i].textContent!="") {
+            if (cells[i].textContent != "") {
                 var number = parseInt(cells[i].textContent.replace(".", ""));
                 total += number;
             }

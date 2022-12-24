@@ -52,6 +52,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -130,17 +133,20 @@
     <Compile Include="Controllers\BookingsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationsController.cs" />
+    <Compile Include="Controllers\TripSchedulesController.cs" />
     <Compile Include="Controllers\TripsController.cs" />
-    <Compile Include="Controllers\TripVMController.cs" />
     <Compile Include="Controllers\TypeofVehiclesController.cs" />
     <Compile Include="Controllers\VehiclesController.cs" />
     <Compile Include="Data\AppDbContext.cs" />
     <Compile Include="Enum\TicketStatus.cs" />
     <Compile Include="Models\Booking.cs" />
     <Compile Include="Models\BookingTicket.cs" />
-    <Compile Include="Models\Destination.cs" />
-    <Compile Include="Models\Origin.cs" />
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\Route.cs" />
+    <Compile Include="Models\RouteSchedule.cs" />
+    <Compile Include="Models\Station.cs" />
     <Compile Include="Models\Trip.cs" />
+    <Compile Include="Models\TripSchedule.cs" />
     <Compile Include="Models\TypeofVehicle.cs" />
     <Compile Include="Models\Vehicle.cs" />
     <Compile Include="Global.asax.cs">
@@ -148,8 +154,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\BookingVM.cs" />
-    <Compile Include="ViewModels\Location.cs" />
+    <Compile Include="ViewModels\TripSVM.cs" />
     <Compile Include="ViewModels\TripVM.cs" />
+    <Compile Include="VnPayLibary.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -195,15 +202,21 @@
     <Content Include="Views\Vehicles\Details.cshtml" />
     <Content Include="Views\Vehicles\Edit.cshtml" />
     <Content Include="Views\Vehicles\Index.cshtml" />
-    <Content Include="Views\Locations\Create.cshtml" />
-    <Content Include="Views\Locations\Index.cshtml" />
-    <Content Include="Views\TripVM\Index.cshtml" />
-    <Content Include="Views\Trips\Create.cshtml" />
-    <Content Include="Views\Trips\Details.cshtml" />
-    <Content Include="Views\Trips\Edit.cshtml" />
-    <Content Include="Views\Trips\Index.cshtml" />
     <Content Include="Views\Bookings\Booking.cshtml" />
     <Content Include="Views\Bookings\Payment.cshtml" />
+    <Content Include="Views\Bookings\Result.cshtml" />
+    <Content Include="Views\Locations\Create.cshtml" />
+    <Content Include="Views\Locations\Index.cshtml" />
+    <Content Include="Views\Trips\Create.cshtml" />
+    <Content Include="Views\Trips\Details.cshtml" />
+    <Content Include="Views\TripSchedules\Index.cshtml" />
+    <Content Include="Views\TripSchedules\Create.cshtml" />
+    <Content Include="Views\TripSchedules\Details.cshtml" />
+    <Content Include="Views\TripSchedules\Edit.cshtml" />
+    <Content Include="Views\TripSchedules\Delete.cshtml" />
+    <Content Include="Views\Trips\Delete.cshtml" />
+    <Content Include="Views\Trips\Index.cshtml" />
+    <Content Include="Views\Trips\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

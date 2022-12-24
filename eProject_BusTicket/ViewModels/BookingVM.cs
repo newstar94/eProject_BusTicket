@@ -9,7 +9,8 @@ namespace eProject_BusTicket.ViewModels
 {
     public class BookingVM
     {
-        public Trip TripDetails { get; set; }
+        public RouteSchedule RouteDetails { get; set; }
+        public TripSchedule TripDetails { get; set; }
         public string PassengerName { get; set; }
         public int PassengerAge { get; set; }
         public decimal Price { get; set; }

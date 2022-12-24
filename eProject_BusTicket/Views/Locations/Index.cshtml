@@ -1,4 +1,4 @@
-﻿@model IEnumerable<eProject_BusTicket.Models.Origin>
+﻿@model IEnumerable<eProject_BusTicket.Models.Location>
 
 @{
     ViewBag.Title = "Index";
@@ -12,7 +12,7 @@
 <table class="table">
     <tr>
         <th>
-            Location
+            @Html.DisplayNameFor(model => model.LocationName)
         </th>
         <th></th>
     </tr>
@@ -20,7 +20,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+            @Html.DisplayFor(modelItem => item.LocationName)
         </td>
     </tr>
 }

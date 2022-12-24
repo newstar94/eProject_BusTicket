@@ -1,124 +1,258 @@
-﻿@model eProject_BusTicket.Models.Trip
+﻿@model eProject_BusTicket.ViewModels.TripVM
 
 @{
     ViewBag.Title = "Create";
 }
 
 <h2>Create</h2>
-<span>@ViewBag.Alert</span>
+
+
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>Create Trip</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<div class="form-horizontal">
-    <h4>Trip</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        <label class="control-label col-md-2">TypeID</label>
-        <div class="col-md-10">
-            @Html.DropDownList("TypeID", null, htmlAttributes: new { @class = "form-control" })
+        @*Chọn loại xe*@
+        <div class="form-group">
+            <label class="control-label col-md-2">TypeID</label>
+            <div class="col-md-10">
+                @Html.DropDownList("TypeID", null, htmlAttributes: new { @class = "form-control" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.VehicleID, "VehicleID", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("VehicleID", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.VehicleID, "", new { @class = "text-danger" })
+        @*Chọn xe*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.Trip.VehicleID, "VehicleID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("VehicleID", ViewBag.VehicleID as SelectList, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Trip.VehicleID, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Name, "Name", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control"} })
-            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Trip.CodeName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input class="form-control text-box single-line" id="CodeName" name="CodeName" type="text" value="">
+                @Html.ValidationMessageFor(model => model.Trip.CodeName, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.OriginID, "OriginID", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("OriginID", null, "Select Origin", htmlAttributes: new { @class = "form-control", @onchange = "fillSelectArr(),calculate()" })
-            @Html.ValidationMessageFor(model => model.OriginID, "", new { @class = "text-danger" })
+        @*Điểm đi*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.Trip.Origin, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Origin", ViewBag.Location as SelectList, "Select Origin", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Trip.Origin, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.DestinationID, "DestinationID", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("DestinationID", null, "Select Destination", htmlAttributes: new { @class = "form-control drop", @onchange = "calculate()" })
-            @Html.ValidationMessageFor(model => model.DestinationID, "", new { @class = "text-danger" })
+        @*Điểm đến*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.Trip.Destination, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Destination", ViewBag.Location as SelectList, "Select Destination", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Trip.Destination, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.DepartureTime, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.DepartureTime, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local", @min = DateTime.Now.ToString("yyyy-MM-ddTHH:mm") } })
-            @Html.ValidationMessageFor(model => model.DepartureTime, "", new { @class = "text-danger" })
+        @*Trạm dừng*@
+        <div class="form-group">
+            <label class="control-label col-md-2">Station</label>
+            <div class="col-md-10">
+                <input name="station" id="station" class="text-box single-line" />
+                <button id="addStation" type="button" class="btn btn-success">Add Station</button>
+                <span id="alert" style="color: red"></span>
+            </div>
         </div>
-    </div>
 
-    <div class="form-group" style="display: none">
-        @Html.LabelFor(model => model.TripTime, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.TripTime, new { htmlAttributes = new { @class = "form-control", @onchange = "calculate ()" } })
-            @Html.ValidationMessageFor(model => model.TripTime, "", new { @class = "text-danger" })
+        @*Danh sách trạm dừng sẽ thêm*@
+        <h4>Stations</h4>
+        <ol id="stationlist" class="col-md-offset-1 col-md-10">
+        </ol>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input id="create" type="button" value="Create" class="btn btn-default" />
+            </div>
         </div>
-    </div>
 
-    <div class="form-group" style="display: none">
-        @Html.LabelFor(model => model.Distance, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Distance, new { htmlAttributes = new { @class = "form-control", @onchange = "calculate ()" } })
-            @Html.ValidationMessageFor(model => model.Distance, "", new { @class = "text-danger" })
-        </div>
     </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Start</th>
+                <th>End</th>
+                <th>Duration</th>
+                <th>Distance</th>
+            </tr>
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input id="create" type="submit" value="Create" class="btn btn-default" />
-        </div>
-    </div>
-</div>
+        </thead>
+        <tbody id="myTable"></tbody>
+    </table>
 }
+
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuogEBliY0VtBWKhRmZ-nkNCwPt1ovgeE&libraries=places&callback=initMap&v=weekly"></script>
-
-<script>
-    function calculate () {
-        var origin = $("#OriginID option:selected").text();
-        var destination = $("#DestinationID option:selected").text();
-        var service = new google.maps.DistanceMatrixService();
-        service.getDistanceMatrix(
-            {
-                origins: [origin],
-                destinations: [destination],
-                travelMode: google.maps.TravelMode.DRIVING,
-                unitSystem: google.maps.UnitSystem.METRIC,
-                avoidHighways: false,
-                avoidTolls: false,
-            },
-            callback
-        );
-        // get distance results
-        function callback(response, status) {
-            if (status == 'OK') {
-                var distance = response.rows[0].elements[0].distance;
-                console.log(distance);
-                var duration = response.rows[0].elements[0].duration;
-                console.log(duration);
-                console.log(response.rows[0].elements[0].distance);
-                var distance = (distance.value / 1000).toFixed(0);
-                var duration_text = duration.text;
-                document.getElementById("Distance").value = distance;
-                document.getElementById("TripTime").value = duration_text;
+<script type="text/javascript">
+    $("#Origin").on('change', function () {
+        $('#Destination').children().remove().end();
+        jQuery("#Origin option").each(function () {
+            if (jQuery(this).val() != $('#Origin').val()) {
+                if ($(this).val() != "") {
+                    $('#Destination').append('<option value=' + jQuery(this).val() + '>' + jQuery(this).text() + '</option>');
+                }
             }
+        });
+    });
+    const options = {
+        componentRestrictions: { country: "vn" },
+    }
+
+    var autocomplete = new google.maps.places.Autocomplete(
+        document.getElementById("station"),
+        options
+    );
+
+    function addStation() {
+        var station = document.getElementById("station").value;
+        if (station != "") {
+            var li = document.createElement("li");
+            li.classList.add('station');
+            li.style.cssText = "margin: 15px";
+            li.innerHTML = '<div name="station" style="display: inline-block; width: 250px">' + station + '</div>';
+            var deleteButton = document.createElement("button");
+            deleteButton.classList.add('btn', 'btn-danger');
+            deleteButton.innerHTML = "Delete";
+            deleteButton.onclick = function () {
+                this.parentNode.remove();
+            };
+            li.appendChild(deleteButton);
+            document.getElementById("stationlist").appendChild(li);
+            document.getElementById("station").value = "";
+            document.getElementById("alert").innerHTML = "";
+        } else {
+            document.getElementById("alert").innerHTML = "Vui lòng nhập trạm dừng";
         }
     }
+
+    const addStationbt = document.getElementById("addStation");
+    const addStationip = document.getElementById("station");
+    addStationbt.addEventListener('click', addStation);
+    addStationip.addEventListener("keydown",
+        function (event) {
+            if (event.keyCode == '13') {
+                event.preventDefault();
+                addStation();
+            }
+        });
+
+    const createbt = document.getElementById("create");
+    createbt.addEventListener('mouseover',
+        function () {
+            var table = document.getElementById("myTable");
+            var rows = table.rows.length;
+            for (var i = rows - 1; i >= 0; i--) {
+                table.deleteRow(i);
+            }
+
+            //Tạo Array Stations mới trong tripvm và gán giá trị
+            var stations = new Array();
+            var stationlist = document.querySelectorAll(".station");
+            for (var i = 0; i < stationlist.length; i++) {
+                stations.push(stationlist[i].innerText.substring(0, stationlist[i].innerText.length - 6));
+            }
+
+            //tạo wayponits gg map
+            var waypts = [];
+            for (var i = 1; i < stations.length - 1; i++) {
+                var waypt = new Object();
+                waypt.location = stations[i];
+                waypt.stopover = true;
+                waypts.push(waypt);
+            }
+            // tạo dịch vụ ggmap
+            var directionsService = new google.maps.DirectionsService();
+            directionsService.route({
+                origin: stations[0],
+                destination: stations[stations.length - 1],
+                travelMode: google.maps.TravelMode.DRIVING,
+                unitSystem: google.maps.UnitSystem.METRIC,
+                waypoints: waypts,
+                avoidFerries: true,
+                avoidHighways: true,
+                avoidTolls: false,
+            })
+                .then((response) => {
+                    const route = response.routes[0];
+                    for (let i = 0; i < route.legs.length; i++) {
+                        var newRow = table.insertRow(-1);
+                        var startCell = newRow.insertCell(0);
+                        startCell.classList.add("start");
+                        var endCell = newRow.insertCell(1);
+                        endCell.classList.add("end");
+                        var durationCell = newRow.insertCell(2);
+                        durationCell.classList.add("duration");
+                        var distanceCell = newRow.insertCell(3);
+                        distanceCell.classList.add("distance");
+                        startCell.innerHTML = stations[i];
+                        endCell.innerHTML = stations[i + 1];
+                        durationCell.innerHTML = (route.legs[i].duration.value / 60).toFixed(0);
+                        var distance = (route.legs[i].distance.value / 1000).toFixed(1);
+                        distanceCell.innerHTML = distance;
+                    }
+                })
+        });
+
+
+    createbt.addEventListener('click', function () {
+        setTimeout(function () {
+            var tripvm = new Object();
+
+            var trip = new Object();
+            trip.VehicleID = $("#VehicleID option:selected").val();
+            trip.CodeName = document.getElementById("CodeName").value;
+            trip.Origin = $("#Origin option:selected").text();
+            trip.Destination = $("#Destination option:selected").text();
+            tripvm.Trip = trip;
+
+            var stations = new Array();
+            var stationlist = document.querySelectorAll(".station");
+            for (var i = 0; i < stationlist.length; i++) {
+                station = new Object();
+                station.StationAdress = (stationlist[i].innerText.substring(0, stationlist[i].innerText.length - 6));
+                stations.push(station);
+            }
+            tripvm.Stations = stations;
+
+            var distance = document.querySelectorAll(".distance");
+            var duration = document.querySelectorAll(".duration");
+            var routes = new Array();
+            for (var i = 0; i < distance.length; i++) {
+                var route = new Object();
+                route.Start = stations[i].StationAdress;
+                route.End = stations[i + 1].StationAdress;
+                route.Distance = distance[i].textContent * 1;
+                route.Duration = duration[i].textContent * 1;
+                routes.push(route);
+            }
+            tripvm.Routes = routes;
+            $.ajax({
+                type: "POST",
+                url: "/Trips/Create",
+                data: JSON.stringify(tripvm),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                }
+            });
+        }, 1000);  // the function will be executed after 1000 milliseconds (1 second)
+    });
+
 </script>

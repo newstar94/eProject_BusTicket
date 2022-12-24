@@ -10,6 +10,8 @@ namespace eProject_BusTicket.Data
     {
         [Key]
         public int TypeID { get; set; }
+        [Required]
+        [Display(Name = "Loại xe")]
         public string Name { get; set; }
         public ICollection<Vehicle> Vehicles { get; set; }
     }

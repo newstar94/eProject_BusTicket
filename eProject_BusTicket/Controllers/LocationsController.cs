@@ -1,49 +1,55 @@
-﻿using eProject_BusTicket.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using eProject_BusTicket.ViewModes;
 using eProject_BusTicket.Data;
+using eProject_BusTicket.Models;
 
 namespace eProject_BusTicket.Controllers
 {
-
     public class LocationsController : Controller
     {
         private AppDbContext db = new AppDbContext();
+
         // GET: Locations
         public ActionResult Index()
         {
-            var origins = db.Origins;
-            return View(origins.ToList());
+            return View(db.Locations.ToList());
         }
+
         public ActionResult Create()
         {
             return View();
         }
+
+        // POST: Locations/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Location location)
+        public ActionResult Create([Bind(Include = "LocationID,LocationName")] Location location)
         {
-            Origin origin = new Origin();
-            Destination destination = new Destination();
-            origin.OriginID = location.LocationID;
-            origin.Name = location.Name;
-
-            destination.DestinationID = location.LocationID;
-            destination.Name = location.Name;
-
             if (ModelState.IsValid)
             {
-                db.Destinations.Add(destination);
+                db.Locations.Add(location);
                 db.SaveChanges();
-                db.Origins.Add(origin);
-                db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+
+            return View(location);
         }
-       
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

@@ -1,0 +1,120 @@
+﻿@model eProject_BusTicket.ViewModels.TripSVM
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TripSchedule</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TripSchedule.Trip.CodeName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TripSchedule.Trip.CodeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TripSchedule.DepartureTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TripSchedule.DepartureTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Vehicle.Code)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TripSchedule.Trip.Vehicle.Code)
+        </dd>
+
+        <dt>
+            Tổng chiều dài tuyến
+        </dt>
+        <dd>
+            @Model.TripSchedule.Trip.Routes.Max(r => r.Distance) km
+        </dd>
+        
+        <dt>
+            Tổng thời gian tuyến
+        </dt>
+
+        <dd>
+            @Model.TripSchedule.Trip.Routes.Max(r => r.Duration) phút
+        </dd>
+    </dl>
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            Điểm đón khách
+        </th>
+        <th>
+            Điểm trả khách
+        </th>
+        <th>
+            Giá vé tạm tính
+        </th>
+        <th>
+            Số ghế trống
+        </th>
+        <th>
+            Thời gian khởi hành
+        </th>
+        <th>
+            Quãng đường
+        </th>
+        <th>
+            Thời gian
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.RouteSchedules)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Route.Start)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Route.End)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Route.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AvaiableSeat)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartureTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Route.Distance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Route.Duration)
+            </td>
+            <td>
+                @Html.ActionLink("Select", "Booking", "Bookings", new { id = item.RouteScheduleID }, "")
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TripSchedule.TripScheduleID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

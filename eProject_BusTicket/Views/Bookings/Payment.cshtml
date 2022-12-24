@@ -14,25 +14,28 @@
         <table class="table">
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Destination.Name)
+                    @Html.DisplayNameFor(model => model.TripDetails.Trip.Vehicle.TypeofVehicle.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Origin.Name)
+                    @Html.DisplayNameFor(model => model.TripDetails.Trip.Vehicle.Code)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Vehicle.TypeofVehicle.Name)
+                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Start)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Vehicle.Code)
+                    @Html.DisplayNameFor(model => model.RouteDetails.Route.End)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.DepartureTime)
+                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Distance)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.TripTime)
+                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Duration)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Distance)
+                    @Html.DisplayNameFor(model => model.RouteDetails.DepartureTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Price)
                 </th>
                 <th>
                     Amount
@@ -42,25 +45,28 @@
             {
                 <tr>
                     <td>
-                        @Model.ToList()[i].TripDetails.Destination.Name
+                        @Model.ToList()[i].TripDetails.Trip.Vehicle.TypeofVehicle.Name
                     </td>
                     <td>
-                        @Model.ToList()[i].TripDetails.Origin.Name
+                        @Model.ToList()[i].TripDetails.Trip.Vehicle.Code
                     </td>
                     <td>
-                        @Model.ToList()[i].TripDetails.Vehicle.TypeofVehicle.Name
+                        @Model.ToList()[i].RouteDetails.Route.Start
                     </td>
                     <td>
-                        @Model.ToList()[i].TripDetails.Vehicle.Code
+                        @Model.ToList()[i].RouteDetails.Route.End
                     </td>
                     <td>
-                        @Model.ToList()[i].TripDetails.DepartureTime
+                        @Model.ToList()[i].RouteDetails.Route.Distance
                     </td>
                     <td>
-                        @Model.ToList()[i].TripDetails.TripTime
+                        @Model.ToList()[i].RouteDetails.Route.Duration
                     </td>
                     <td>
-                        @Model.ToList()[i].TripDetails.Distance
+                        @Model.ToList()[i].RouteDetails.DepartureTime
+                    </td>
+                    <td>
+                        @Model.ToList()[i].RouteDetails.Route.Price
                     </td>
                     <td>
                         @Model.Count()
@@ -97,14 +103,17 @@
                 </tr>
             }
             <tfoot>
-            <td colspan="1"></td>
-            <td><b>Total:</b></td>
-            <td id="total">
-            </td>
+                <tr>
+                    <td colspan="1"></td>
+                    <td><b>Total:</b></td>
+                    <td id="total"></td>
+                </tr>
+
             </tfoot>
         </table>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
+                <button\>@Html.ActionLink("Payment", "vnpay")</button\>
                 <input id="create" type="submit" value="Payment" class="btn btn-default" />
             </div>
         </div>

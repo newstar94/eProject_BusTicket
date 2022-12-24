@@ -57,6 +57,7 @@ namespace eProject_BusTicket.Controllers
             {
                 TypeofVehicle typeofVehicle = db.TypeofVehicles.Find(vehicle.TypeID);
                 vehicle.Code = typeofVehicle.Name.Substring(0,2).ToUpper() + new Random().Next(100,999).ToString();
+                vehicle.IsActive=true;
                 db.Vehicles.Add(vehicle);
                 db.SaveChanges();
                 return RedirectToAction("Index");
