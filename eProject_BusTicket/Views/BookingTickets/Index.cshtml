@@ -1,0 +1,68 @@
+﻿@using eProject_BusTicket.Enum
+@model IEnumerable<eProject_BusTicket.Models.BookingTicket>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Booking.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RouteSchedule.RouteScheduleCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DepartureTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PassengerName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PassengerAge)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Booking.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RouteSchedule.RouteScheduleCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DepartureTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PassengerName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PassengerAge)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        @if (item.DepartureTime > DateTime.Now.AddHours(1)&&item.Status==TicketStatus.NotUsedYet)
+        {
+            <td>
+                @Html.ActionLink("Cancel","Cancel",new {id=@item.BookingTicketID})
+            </td>
+        }
+    </tr>
+}
+
+</table>

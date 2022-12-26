@@ -127,6 +127,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BookingsController.cs" />
+    <Compile Include="Controllers\BookingTicketsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="Controllers\TripSchedulesController.cs" />
@@ -215,6 +216,9 @@
     <Content Include="Views\Trips\Delete.cshtml" />
     <Content Include="Views\Trips\Index.cshtml" />
     <Content Include="Views\Trips\Edit.cshtml" />
+    <Content Include="Views\BookingTickets\Index.cshtml" />
+    <Content Include="Views\BookingTickets\Cancel.cshtml" />
+    <Content Include="Views\Bookings\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

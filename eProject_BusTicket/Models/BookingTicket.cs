@@ -17,6 +17,7 @@ namespace eProject_BusTicket.Models
         public virtual Booking Booking { get; set; }
         [DisplayFormat(DataFormatString = "{0:N0}")]
         public decimal Price { get; set; }
+        public DateTime DepartureTime { get; set; }
         public string PassengerName { get; set; }
         public int PassengerAge { get; set; }
         public TicketStatus Status { get; set; }

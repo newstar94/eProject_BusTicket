@@ -27,6 +27,12 @@ namespace eProject_BusTicket.Controllers
         private static readonly ILog log =
             LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        public ActionResult Index()
+        {
+            var booking = db.Bookings;
+            return View(booking.ToList());
+        }
+
         // GET: Bookings
         public ActionResult Booking(int? id)
 
@@ -66,6 +72,7 @@ namespace eProject_BusTicket.Controllers
             {
                 var ticket = new BookingTicket();
                 ticket.RouteScheduleID = id;
+                ticket.DepartureTime = route.DepartureTime;
                 ticket.PassengerAge = PassengerAge[i];
                 ticket.PassengerName = PassengerName[i];
                 if (PassengerAge[i] < 6)
@@ -184,10 +191,21 @@ namespace eProject_BusTicket.Controllers
                 String vnp_SecureHash = Request.QueryString["vnp_SecureHash"];
                 long TotalPayment = Convert.ToInt64(vnpay.GetResponseData("vnp_Amount")) / 100;
                 bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, vnp_HashSecret);
+
                 if (checkSignature)
                 {
                     if (vnp_ResponseCode == "00" && vnp_TransactionStatus == "00")
                     {
+                        //Tạo acc tesst
+                        Account account = new Account();
+                        account.Name = "Dương";
+                        account.Email = "duong@gmail.com";
+                        account.PhoneNumber = "0912345678";
+                        account.Password = "1234";
+                        account.Username = "newstar94";
+                        account.Role = "Admin";
+                        db.Accounts.Add(account);
+
                         //Thêm đơn booking
                         Booking booking = new Booking();
                         booking.Name = buyer.Name;
@@ -198,7 +216,7 @@ namespace eProject_BusTicket.Controllers
                         booking.DateTime = DateTime.Now;
                         booking.Status = "Success";
                         booking.TranId = TranId;
-                        booking.AccountID = 1;
+                        booking.AccountID = account.AccountID;
                         //thêm AccountID sau
                         db.Bookings.Add(booking);
                         db.SaveChanges();
@@ -214,14 +232,13 @@ namespace eProject_BusTicket.Controllers
                                 db.SaveChanges();
                             }
                         }
-
-
                         //Lưu vé
                         foreach (var ticket in bookingTickets)
                         {
                             BookingTicket bookingTicket = new BookingTicket();
                             bookingTicket.BookingID = booking.BookingID;
                             bookingTicket.RouteScheduleID = ticket.RouteScheduleID;
+                            bookingTicket.DepartureTime=ticket.DepartureTime;
                             bookingTicket.Price = ticket.Price;
                             bookingTicket.PassengerName = ticket.PassengerName;
                             bookingTicket.PassengerAge = ticket.PassengerAge;
