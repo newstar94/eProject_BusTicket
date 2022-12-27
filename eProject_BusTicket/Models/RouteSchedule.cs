@@ -15,6 +15,7 @@ namespace eProject_BusTicket.Models
         public virtual Route Route { get; set; }
         [Display(Name = "Số ghế trống")]
         public int AvaiableSeat { get; set; }
+        [DisplayFormat(DataFormatString = "{0:HH:mm dd/MM/yyyy}")]
         [Display(Name = "Thời gian khởi hành")]
         public DateTime DepartureTime { get; set; }
     }

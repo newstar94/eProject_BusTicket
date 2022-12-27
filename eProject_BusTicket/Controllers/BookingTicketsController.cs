@@ -67,10 +67,18 @@ namespace eProject_BusTicket.Controllers
                 vnpay.AddRequestData("vnp_Command", "refund");
                 vnpay.AddRequestData("vnp_TmnCode", vnpTmnCode);
 
-                vnpay.AddRequestData("vnp_TransactionType", "03");
+                if (amountrf==ticket.Price)
+                {
+                    vnpay.AddRequestData("vnp_TransactionType", "03");
+                }
+                else
+                {
+                    vnpay.AddRequestData("vnp_TransactionType", "03");
+                }
+                
                 vnpay.AddRequestData("vnp_CreateBy", booking.Email);
                 vnpay.AddRequestData("vnp_TxnRef", booking.BookingCode);
-                vnpay.AddRequestData("vnp_Amount", amountrf.ToString());
+                vnpay.AddRequestData("vnp_Amount", (amountrf*100).ToString());
                 vnpay.AddRequestData("vnp_OrderInfo", "REFUND ORDERID:" + booking.BookingCode);
                 vnpay.AddRequestData("vnp_TransDate", booking.DateTime.ToString("yyyyMMddHHmmss"));
                 vnpay.AddRequestData("vnp_CreateDate", createDate.ToString("yyyyMMddHHmmss"));

@@ -135,7 +135,7 @@ namespace eProject_BusTicket.Controllers
             Booking booking = new Booking();
             //Save order to db
             string BookingCode = db.RouteSchedules.Find(bookingTickets[0].RouteScheduleID).RouteScheduleCode;
-            booking.BookingCode = BookingCode + DateTime.Now.ToString("ddMMyyyHHmm"); // Giả lập mã giao dịch hệ thống merchant gửi sang VNPAY
+            booking.BookingCode = BookingCode + DateTime.Now.ToString("ddMMyyHHmmss"); // Giả lập mã giao dịch hệ thống merchant gửi sang VNPAY
             booking.TotalPayment = (int)TotalPayment; // Giả lập số tiền thanh toán hệ thống merchant gửi sang VNPAY 100,000 VND
             booking.Status = "0"; //0: Trạng thái thanh toán "chờ thanh toán" hoặc "Pending"
             booking.DateTime = DateTime.Now;

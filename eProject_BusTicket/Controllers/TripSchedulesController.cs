@@ -17,10 +17,27 @@ namespace eProject_BusTicket.Controllers
         private AppDbContext db = new AppDbContext();
 
         // GET: TripSchedules
-        public ActionResult Index()
+        public ActionResult Index(int? Origin, int? Destination, DateTime? dateTime)
         {
+            var origin = "";
+            var destination = "";
+            if (Origin != null)
+            {
+                origin = db.Locations.Find(Origin).LocationName;
+
+            }
+            if (Destination != null)
+            {
+                destination = db.Locations.Find(Destination).LocationName;
+            }
+
+            ViewBag.Location = new SelectList(db.Locations, "LocationID", "LocationName");
             List<TripSVM> tripSVMs = new List<TripSVM>();
-            var tripSchedules = db.TripSchedules.Include(t => t.Trip);
+            var tripSchedules = db.TripSchedules
+                .Where(t => t.Trip.Origin == origin || Origin == null)
+                .Where(t => t.Trip.Destination == destination || Destination == null)
+                .Where(t => t.Date == dateTime || dateTime == null)
+                .Include(t => t.Trip);
             var routeSchedules = db.RouteSchedules.ToList();
             var stations = db.Stations.ToList();
 
@@ -29,7 +46,7 @@ namespace eProject_BusTicket.Controllers
                 TripSVM tripSVM = new TripSVM();
                 tripSVM.TripSchedule = tripSchedule;
                 tripSVM.RouteSchedules = routeSchedules.Where(rs => rs.TripScheduleID == tripSchedule.TripScheduleID).ToList();
-                tripSVM.Stations = stations.Where(st=>st.TripID==tripSchedule.TripID).ToList();
+                tripSVM.Stations = stations.Where(st => st.TripID == tripSchedule.TripID).ToList();
                 tripSVMs.Add(tripSVM);
             }
 
@@ -47,13 +64,13 @@ namespace eProject_BusTicket.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
+
             if (tripSchedule == null)
             {
                 return HttpNotFound();
             }
-            tripSVM.TripSchedule=tripSchedule;
-            tripSVM.RouteSchedules= routeSchedules.Where(rs => rs.TripScheduleID == tripSchedule.TripScheduleID).ToList();
+            tripSVM.TripSchedule = tripSchedule;
+            tripSVM.RouteSchedules = routeSchedules.Where(rs => rs.TripScheduleID == tripSchedule.TripScheduleID).ToList();
             tripSVM.Stations = stations.Where(st => st.TripID == tripSchedule.TripID).ToList();
             return View(tripSVM);
         }
@@ -76,7 +93,8 @@ namespace eProject_BusTicket.Controllers
             {
                 tripSchedule.IsActive = true;
                 var trip = db.Trips.Find(tripSchedule.TripID);
-                tripSchedule.TripScheduleCode= trip.CodeName+tripSchedule.DepartureTime.ToString("ddMMyyyyHHmm");
+                tripSchedule.TripScheduleCode = trip.CodeName + tripSchedule.DepartureTime.ToString("ddMMyyHHmm");
+                tripSchedule.Date = tripSchedule.DepartureTime.Date;
                 db.TripSchedules.Add(tripSchedule);
                 db.SaveChanges();
                 var routes = db.Routes.Where(r => r.TripID == tripSchedule.TripID).ToList();
@@ -133,7 +151,7 @@ namespace eProject_BusTicket.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TripID = new SelectList(db.Trips.Where(t=>t.IsActive==true), "TripID", "CodeName", tripSchedule.TripID);
+            ViewBag.TripID = new SelectList(db.Trips.Where(t => t.IsActive == true), "TripID", "CodeName", tripSchedule.TripID);
             return View(tripSchedule);
         }
 

@@ -15,6 +15,7 @@ namespace eProject_BusTicket.Models
         [DisplayFormat(DataFormatString = "{0:N0}")]
         public decimal TotalPayment { get; set; }
         public string BookingCode { get; set; }
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd/MM/yyyy}")]
         public DateTime DateTime { get; set; }
         public string Status { get; set; }
         public long TranId { get; set; }
