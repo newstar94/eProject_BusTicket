@@ -1,0 +1,110 @@
+﻿@model IEnumerable<eProject_BusTicket.ViewModels.TripSVM>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@using (Html.BeginForm())
+{
+    <div class="form-group">
+
+        <div class="col-md-10">
+            @Html.DropDownList("Origin", ViewBag.Location as SelectList, "Select Origin", htmlAttributes: new { @class = "form-control" })
+        </div>
+    </div>
+
+    @*Điểm đến*@
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.DropDownList("Destination", ViewBag.Location as SelectList, "Select Destination", htmlAttributes: new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+         <input name="dateTime" type="date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Search" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TripSchedule.Trip.CodeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TripSchedule.DepartureTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Origin)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Destination)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Vehicle.Code)
+        </th>
+        <th>
+            Chiều dài chuyến
+        </th>
+        <th>
+            Tổng thời gian chuyến
+        </th>
+        <th>
+            Số điểm đón/trả khách
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TripSchedule.Trip.CodeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TripSchedule.DepartureTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Origin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Destination)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Vehicle.Code)
+            </td>
+            <td>
+                @item.TripSchedule.Trip.Routes.Max(r => r.Distance) km
+            </td>
+            <td>
+                @item.TripSchedule.Trip.Routes.Max(r => r.Duration) phút
+            </td>
+            <td>
+                @item.Stations.Count()
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.TripSchedule.TripScheduleID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.TripSchedule.TripScheduleID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.TripSchedule.TripScheduleID })
+            </td>
+        </tr>
+    }
+
+</table>

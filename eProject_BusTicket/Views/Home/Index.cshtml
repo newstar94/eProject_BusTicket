@@ -1,31 +1,69 @@
-﻿@{
+﻿@model IEnumerable<eProject_BusTicket.ViewModels.TripSVM>
+@{
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    <div class="qoute_content">
+        <div class="qoute_child">Find Next Place To Visit</div>
+        <div class="qoute_child_small">Discover amazing places at exclusive deals</div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+
+    <form action="/TripSchedules/Index" method="post" class="search">
+        <div class="search_from">
+            <i class="fas fa-map-marker-alt"></i> From:
+            @Html.DropDownList("Origin", ViewBag.Location as SelectList, "Select Origin")
+        </div>
+        <i class="fas fa-arrow-right"></i>
+        <div class="search_to">
+            <i class="fas fa-map-marker-alt"></i> To:
+            @Html.DropDownList("Destination", ViewBag.Location as SelectList, "Select Destination")
+        </div>
+        <div class="search_date">
+            <i class="far fa-calendar-alt"></i> Date:
+            <input name="dateTime" type="date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" required />
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-search"></i>
+        </button>
+    </form>
+
+    <div class="gt">
+        <i class="fas fa-globe"></i>
+        <div>
+            <div class="main">
+                100+ DESTINATIONS
+            </div>
+            <div class="sub">Our expert team handpicked all destinations in this site</div>
+        </div>
+        <i class="fas fa-dollar-sign"></i>
+        <div>
+            <div class="main">
+                BEST PRICE GUARANTEE
+            </div>
+            <div class="sub">Price match within 48 hours of order confirmation</div>
+        </div>
+        <i class="fas fa-handshake"></i>
+        <div>
+
+            <div class="main">
+                TOP NOTCH SUPPORT
+                </div>
+            <div class="sub">We are here to help, before, during, and even after your trip.</div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+
 </div>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $("#Origin").on('change', function () {
+        $('#Destination').children().remove().end();
+        jQuery("#Origin option").each(function () {
+            if (jQuery(this).val() != $('#Origin').val()) {
+                if ($(this).val() != "") {
+                    $('#Destination').append('<option value=' + jQuery(this).val() + '>' + jQuery(this).text() + '</option>');
+                }
+            }
+        });
+    });
+</script>

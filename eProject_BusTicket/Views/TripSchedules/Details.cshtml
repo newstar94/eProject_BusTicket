@@ -4,79 +4,87 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
 
-<div>
-    <h4>TripSchedule</h4>
+    <h4>TripSchedule Details</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.TripSchedule.Trip.CodeName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TripSchedule.Trip.CodeName)
-        </dd>
+    <div class="details">
+        <div class="col-md-6">
+            <div>
+                <div class="label">
+                    Trip Code:
+                </div>
+                <div class="content">
+                    @Html.DisplayFor(model => model.TripSchedule.Trip.CodeName)
+                </div>
+            </div>
+            <div>
+                <div class="label">
+                    Departure Time:
+                </div>
+                <div class="content">
+                    @Html.DisplayFor(model => model.TripSchedule.DepartureTime)
+                </div>
+            </div>
+            <div>
+                <div class="label">
+                    Type:
+                </div>
+                <div class="content">
+                    @Html.DisplayFor(model => model.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div>
+                <div class="label">
+                    Vehicle Code:
+                </div>
+                <div class="content">
+                    @Html.DisplayFor(model => model.TripSchedule.Trip.Vehicle.Code)
+                </div>
+            </div>
+            <div>
+                <div class="label">
+                    Total Distance:
+                </div>
+                <div class="content">
+                    @Model.TripSchedule.Trip.Routes.Max(r => r.Distance) km
+                </div>
+            </div>
+            <div>
+                <div class="label">
+                    Total Time:
+                </div>
+                <div class="content">
+                    @Model.TripSchedule.Trip.Routes.Max(r => r.Duration) mins
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TripSchedule.DepartureTime)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TripSchedule.DepartureTime)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Vehicle.Code)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TripSchedule.Trip.Vehicle.Code)
-        </dd>
-
-        <dt>
-            Tổng chiều dài tuyến
-        </dt>
-        <dd>
-            @Model.TripSchedule.Trip.Routes.Max(r => r.Distance) km
-        </dd>
-        
-        <dt>
-            Tổng thời gian tuyến
-        </dt>
-
-        <dd>
-            @Model.TripSchedule.Trip.Routes.Max(r => r.Duration) phút
-        </dd>
-    </dl>
-</div>
 
 <table class="table">
     <tr>
         <th>
-            Điểm đón khách
+            Pick-up point
         </th>
         <th>
-            Điểm trả khách
+            Drop-off point
         </th>
         <th>
-            Giá vé tạm tính
+            Price
         </th>
         <th>
-            Số ghế trống
+            Avaiable Seats
         </th>
         <th>
-            Thời gian khởi hành
+            Departure Time
         </th>
         <th>
-            Quãng đường
+            Distance
         </th>
         <th>
-            Thời gian
+            Time
         </th>
         <th></th>
     </tr>
@@ -103,10 +111,10 @@
                 @Html.DisplayFor(modelItem => item.Route.Distance) km
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Route.Duration) phút
+                @Html.DisplayFor(modelItem => item.Route.Duration) mins
             </td>
             <td>
-                @Html.ActionLink("Select", "Booking", "Bookings", new { id = item.RouteScheduleID }, "")
+                <button class="btn btn-danger"> @Html.ActionLink("Booking", "Booking", "Bookings", new { id = item.RouteScheduleID }, "")</button>
             </td>
         </tr>
     }
@@ -115,6 +123,5 @@
 
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.TripSchedule.TripScheduleID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

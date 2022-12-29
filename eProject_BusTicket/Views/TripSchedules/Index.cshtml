@@ -4,107 +4,114 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<form action="/TripSchedules/Index" method="post" class="search">
+    <div class="search_from">
+        <i class="fas fa-map-marker-alt"></i> From:
+        @Html.DropDownList("Origin", ViewBag.Location as SelectList, "Select Origin")
+    </div>
+    <i class="fas fa-arrow-right"></i>
+    <div class="search_to">
+        <i class="fas fa-map-marker-alt"></i> To:
+        @Html.DropDownList("Destination", ViewBag.Location as SelectList, "Select Destination")
+    </div>
+    <div class="search_date">
+        <i class="far fa-calendar-alt"></i> Date:
+        <input name="dateTime" type="date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" required />
+    </div>
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-search"></i>
+    </button>
+</form>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-
-@using (Html.BeginForm())
+@if (Model.Count() > 0)
 {
-    <div class="form-group">
+    <table class="table">
+        <tr>
+            <th>
+                Trip Code
+            </th>
+            <th>
+                Departure Time
+            </th>
+            <th>
+                Origin
+            </th>
+            <th>
+                Destination
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Vehicle Code
+            </th>
+            <th>
+                Distance
+            </th>
+            <th>
+                Time
+            </th>
+            <th>
+                Pickup Points
+            </th>
+            <th></th>
+        </tr>
 
-        <div class="col-md-10">
-            @Html.DropDownList("Origin", ViewBag.Location as SelectList, "Select Origin", htmlAttributes: new { @class = "form-control" })
-        </div>
-    </div>
-
-    @*Điểm đến*@
-    <div class="form-group">
-        <div class="col-md-10">
-            @Html.DropDownList("Destination", ViewBag.Location as SelectList, "Select Destination", htmlAttributes: new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-         <input name="dateTime" type="date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")"/>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Search" class="btn btn-default" />
-        </div>
-    </div>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TripSchedule.Trip.CodeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TripSchedule.DepartureTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Origin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Destination)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Vehicle.Code)
+                </td>
+                <td>
+                    @item.TripSchedule.Trip.Routes.Max(r => r.Distance) km
+                </td>
+                <td>
+                    @item.TripSchedule.Trip.Routes.Max(r => r.Duration) mins
+                </td>
+                <td>
+                    @item.Stations.Count()
+                </td>
+                <td>
+                    <button class="btn btn-success">@Html.ActionLink("Select", "Details", new { id = item.TripSchedule.TripScheduleID })</button> 
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <div class="not_found"> NOT FOUND </div>
 }
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.TripSchedule.Trip.CodeName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TripSchedule.DepartureTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Origin)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Destination)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TripSchedule.Trip.Vehicle.Code)
-        </th>
-        <th>
-            Chiều dài chuyến
-        </th>
-        <th>
-            Tổng thời gian chuyến
-        </th>
-        <th>
-            Số điểm đón/trả khách
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TripSchedule.Trip.CodeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TripSchedule.DepartureTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Origin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Destination)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Vehicle.Code)
-            </td>
-            <td>
-                @item.TripSchedule.Trip.Routes.Max(r => r.Distance) km
-            </td>
-            <td>
-                @item.TripSchedule.Trip.Routes.Max(r => r.Duration) phút
-            </td>
-            <td>
-                @item.Stations.Count()
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.TripSchedule.TripScheduleID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.TripSchedule.TripScheduleID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.TripSchedule.TripScheduleID })
-            </td>
-        </tr>
-    }
 
-</table>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $("#Origin").on('change', function () {
+        $('#Destination').children().remove().end();
+        jQuery("#Origin option").each(function () {
+            if (jQuery(this).val() != $('#Origin').val()) {
+                if ($(this).val() != "") {
+                    $('#Destination').append('<option value=' + jQuery(this).val() + '>' + jQuery(this).text() + '</option>');
+                }
+            }
+        });
+    });
+</script>

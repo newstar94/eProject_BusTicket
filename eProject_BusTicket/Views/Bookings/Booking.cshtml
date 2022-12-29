@@ -4,7 +4,6 @@
     ViewBag.Title = "Booking";
 }
 
-<h2>Booking</h2>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -15,31 +14,31 @@
         <table class="table">
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Trip.Vehicle.TypeofVehicle.Name)
+                    Type
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.TripDetails.Trip.Vehicle.Code)
+                    Vehicle Code
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Start)
+                    Pick-up point
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.RouteDetails.Route.End)
+                    Drop-off point
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Distance)
+                    Distance
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Duration)
+                    Time
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.RouteDetails.DepartureTime)
+                    Departure Time
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.RouteDetails.Route.Price)
+                    Price
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.RouteDetails.AvaiableSeat)
+                    Avaiable Seat
                 </th>
 
                 <th>
@@ -61,10 +60,10 @@
                     @Html.DisplayFor(model => model.RouteDetails.Route.End)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => model.RouteDetails.Route.Distance)
+                    @Html.DisplayFor(model => model.RouteDetails.Route.Distance) km
                 </td>
                 <td>
-                    @Html.DisplayFor(model => model.RouteDetails.Route.Distance)
+                    @Html.DisplayFor(model => model.RouteDetails.Route.Duration) mins
                 </td>
                 <td>
                     @Html.DisplayFor(model => model.RouteDetails.DepartureTime)
@@ -80,42 +79,60 @@
                     @Html.DisplayFor(model => model.RouteDetails.AvaiableSeat)
                 </td>
                 <td>
-                    <input type="number" id="seats" onchange="addinfor()" />
+                    <input type="number" id="seats" onchange="addinfor()" required />
                 </td>
             </tr>
         </table>
+        <div class="buy">
+            <div class="col-md-7">
+                <table class="table" id="ticket" style="display: none">
+                    <tr>
+                        <th>
+                            Passenger Name
+                        </th>
+                        <th>
+                            Age
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                    </tr>
+                    <tfoot>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td><b>Total:</b></td>
+                            <td id="total">
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
 
-
-        <table class="table" id="ticket" style="display: none">
-            <tr>
-                <th>
-                    Passenger Name
-                </th>
-                <th>
-                    Age
-                </th>
-                <th>
-                    Price
-                </th>
-            </tr>
-            <tfoot>
-                <tr>
-                    <td colspan="1"></td>
-                    <td><b>Total:</b></td>
-                    <td id="total">
-                    </td>
-                </tr>
-
-            </tfoot>
-        </table>
-
-        <input name="Name" value="@ViewBag.Name" />
-        <input name="Email" value="@ViewBag.Email" />
-        <input name="PhoneNumber" value="@ViewBag.PhoneNumber" />
+            <div class="col-md-4">
+                <h4>
+                    Buyer Infor
+                </h4>
+                <form class="buyer_infor">
+                    <div class="mb-3">
+                        <label class="form-label">Name: </label>
+                        <input name="Name" value="@ViewBag.Name" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email: </label>
+                        <input name="Email" value="@ViewBag.Email" required/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone: </label>
+                        <input name="PhoneNumber" value="@ViewBag.PhoneNumber" required/>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input id="create" type="submit" value="Create" class="btn btn-default" />
+                <input id="create" type="submit" value="Check Out" class="btn btn-danger" />
             </div>
         </div>
     </div>
@@ -140,8 +157,8 @@
             var nameCell = row.insertCell(0);
             var ageCell = row.insertCell(1);
             var priceCell = row.insertCell(2);
-            nameCell.innerHTML = '<input type="text" name="PassengerName" placeholder="Passenger Name">';
-            ageCell.innerHTML = '<input type="number" name="PassengerAge" placeholder="Age" class="PassengerAge" onchange="caculateprice(this)">';
+            nameCell.innerHTML = '<input type="text" name="PassengerName" placeholder="Passenger Name" required>';
+            ageCell.innerHTML = '<input type="number" name="PassengerAge" placeholder="Age" class="PassengerAge" onchange="caculateprice(this)" required>';
             priceCell.innerHTML = '<div class="price"></div>';
         }
     }

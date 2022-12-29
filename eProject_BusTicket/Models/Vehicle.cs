@@ -16,8 +16,9 @@ namespace eProject_BusTicket.Data
         public int Seats { get; set; }
         [Required]
         [Display(Name = "Giá/km")]
-        [DisplayFormat(DataFormatString = "{0:N0}")]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal Price { get; set; }
+        [Display(Name = "Trạng thái")]
         public bool IsActive { get; set; }
         [Display(Name = "Mã xe")]
         public string Code { get; set; }

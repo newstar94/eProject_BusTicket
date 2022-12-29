@@ -1,0 +1,38 @@
+﻿@model IEnumerable<eProject_BusTicket.Models.Location>
+
+@{
+    ViewBag.Title = "Danh sách địa điểm";
+}
+
+<h2>Danh sách địa điểm</h2>
+<style>
+    a {
+        text-decoration: none !important;
+        color: white
+    }
+    a:hover {
+        color: white
+    }
+    
+
+</style>
+<button class=" btn btn-success">
+    @Html.ActionLink("Tạo mới", "Create")
+</button>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.LocationName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.LocationName)
+        </td>
+    </tr>
+}
+
+</table>
