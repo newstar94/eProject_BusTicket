@@ -1,19 +1,28 @@
-﻿@using eProject_BusTicket.Enum
+﻿@using eProject_BusTicket.Areas.Admin.Enum
 @model IEnumerable<eProject_BusTicket.Models.BookingTicket>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Tickets";
 }
 
-<h2>Index</h2>
+<h2>Tickets</h2>
+@if (@ViewBag.Cancel != null)
+{
+    <div class="alert alert-success" role="alert">
+        <b>  @ViewBag.Cancel</b>
+    </div>
+}
 
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Booking.Name)
+            Buyer Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.RouteSchedule.RouteScheduleCode)
+            @Html.DisplayNameFor(model => model.RouteSchedule.Route.Start)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RouteSchedule.Route.End)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Price)
@@ -33,36 +42,46 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Booking.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RouteSchedule.RouteScheduleCode)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DepartureTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PassengerName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PassengerAge)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        @if (item.DepartureTime > DateTime.Now.AddHours(1)&&item.Status==TicketStatus.NotUsedYet)
-        {
+    @foreach (var item in Model)
+    {
+        <tr>
             <td>
-                @Html.ActionLink("Cancel","Cancel",new {id=@item.BookingTicketID})
+                @Html.DisplayFor(modelItem => item.Booking.Name)
             </td>
-        }
-    </tr>
-}
-
+            <td>
+                @Html.DisplayFor(modelItem => item.RouteSchedule.Route.Start)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RouteSchedule.Route.End)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartureTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerAge)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            @if (item.DepartureTime > DateTime.Now.AddHours(1) && item.Status == TicketStatus.NotUsedYet)
+            {
+                <td>
+                    @Html.ActionLink("Cancel", "Cancel", new { id = @item.BookingTicketID }, new { onclick = "return confirm('Are sure wants to Cancel?');" })
+                </td>
+            }
+        </tr>
+    }
 </table>
+<script type="text/javascript">
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(500, function () {
+            $(this).remove();
+        });
+    }, 3000);
+</script>

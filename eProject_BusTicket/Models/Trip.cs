@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using System.Web.Routing;
-using eProject_BusTicket.Data;
-using static System.Collections.Specialized.BitVector32;
 
 namespace eProject_BusTicket.Models
 {

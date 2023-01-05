@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("eProject_BusTicket")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("21AK22.COM & HIENPC.COM")]
 [assembly: AssemblyProduct("eProject_BusTicket")]
-[assembly: AssemblyCopyright("Copyright ©  2022")]
+[assembly: AssemblyCopyright("Copyright © 21AK22.COM & HIENPC.COM 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1ae9ed67-0607-4d4c-a2f5-3a0ed6382a84")]
+[assembly: Guid("c919971d-e549-4527-a608-4390d9146082")]
 
 // Version information for an assembly consists of the following four values:
 //

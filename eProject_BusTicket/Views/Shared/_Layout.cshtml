@@ -14,38 +14,34 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg static-top">
-    <div class="container">
-        <a class="navbar-brand" href="/Home">
-            <img src="/Images/logo.png" alt="..." height="60">
-        </a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav center">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/Home">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">View Tickets</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/Home/About">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/Home/Contact">Contact</a>
-                </li>
-            </ul>
+    <nav class="navbar navbar-expand-lg static-top">
+        <div class="container">
+            <a class="navbar-brand" href="/Home">
+                <img src="/Images/logo.png" alt="..." height="60">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav center">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/Home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">View Tickets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Home/About">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Home/Contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            @Html.Partial("_LoginPartial")
         </div>
-        <a class="login" href="#">
-            Login
-            <i class="fas fa-user"></i>
-        </a>
-
+    </nav>
+    <div class="cover">
+        <img src="~/Images/Background.png" />
     </div>
-</nav>
-<div class="cover">
-    <img src="~/Images/Background.png" />
-</div>
-<section class="container body-content">
+    <section class="container body-content">
         @RenderBody()
         <hr />
 

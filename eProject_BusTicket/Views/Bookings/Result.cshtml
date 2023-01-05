@@ -1,8 +1,99 @@
-﻿
+﻿@using eProject_BusTicket.Areas.Admin.Enum
+@model IEnumerable<eProject_BusTicket.Models.BookingTicket>
 @{
     ViewBag.Title = "Result";
 }
 
 <h2>Result</h2>
-@Request.QueryString
-@ViewBag.Result 
+
+@if (@ViewBag.Result != null)
+{
+    <div class="alert alert-success" role="alert">
+        <b>@ViewBag.Result</b>
+    </div>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            Buyer Name
+        </th>
+        <th>
+            Phone Number
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Start
+        </th>
+        <th>
+            End
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            Departure Time
+        </th>
+        <th>
+            Passenger Name
+        </th>
+        <th>
+            Passenger Age
+        </th>
+        <th>
+            Status
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Booking.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Booking.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Booking.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RouteSchedule.Route.Start)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RouteSchedule.Route.End)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartureTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerAge)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            @if (item.DepartureTime > DateTime.Now.AddHours(1) && item.Status == TicketStatus.NotUsedYet)
+            {
+                <td>
+                    @Html.ActionLink("Cancel", "Cancel", "BookingTickets", new { id = @item.BookingTicketID }, new { onclick = "return confirm('Are sure wants to Cancel?');" })
+                </td>
+            }
+        </tr>
+    }
+</table>
+<script type="text/javascript">
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(500, function () {
+            $(this).remove();
+        });
+    }, 3000);
+</script>

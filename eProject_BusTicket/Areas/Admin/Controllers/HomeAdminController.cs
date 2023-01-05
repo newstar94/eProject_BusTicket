@@ -6,9 +6,10 @@ using System.Web.Mvc;
 
 namespace eProject_BusTicket.Areas.Admin.Controllers
 {
-    public class HomeController : Controller
+    [Authorize(Roles = "Admin")]
+    public class HomeAdminController : Controller
     {
-        // GET: Admin/Home
+        // GET: Admin/HomeAdmin
         public ActionResult Index()
         {
             return View();

@@ -1,9 +1,8 @@
-﻿using System;
+﻿using eProject_BusTicket.Models;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using eProject_BusTicket.Models;
 
 namespace eProject_BusTicket.ViewModels
 {

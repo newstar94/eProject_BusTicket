@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace eProject_BusTicket.Enum
+namespace eProject_BusTicket.Areas.Admin.Enum
 {
     public enum TicketStatus
     {

@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using eProject_BusTicket.Data;
 using eProject_BusTicket.Models;
 using eProject_BusTicket.ViewModels;
 
 namespace eProject_BusTicket.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class TripsController : Controller
     {
-        private AppDbContext db = new AppDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Trips
         public ActionResult Index()
@@ -26,7 +25,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
             foreach (var trip in trips)
             {
                 TripVM tripvm = new TripVM();
-                tripvm.Trip=trip;
+                tripvm.Trip = trip;
                 tripvm.Routes = routes.Where(r => r.TripID == trip.TripID).ToList();
                 tripvm.Stations = stations.Where(st => st.TripID == trip.TripID).ToList();
                 tripVMs.Add(tripvm);
@@ -63,7 +62,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         // GET: Trips/Create
         public ActionResult Create()
         {
-            ViewBag.VehicleID = new SelectList(db.Vehicles.Where(v=>v.IsActive==true), "VehicleID", "Code");
+            ViewBag.VehicleID = new SelectList(db.Vehicles.Where(v => v.IsActive == true), "VehicleID", "Code");
             ViewBag.Location = new SelectList(db.Locations, "LocationID", "LocationName");
             ViewBag.TypeID = new SelectList(db.TypeofVehicles, "TypeID", "Name");
             return View();
@@ -78,7 +77,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 Trip trip = new Trip();
-                trip.VehicleID=tripvm.Trip.VehicleID;
+                trip.VehicleID = tripvm.Trip.VehicleID;
                 trip.CodeName = tripvm.Trip.CodeName;
                 trip.Origin = tripvm.Trip.Origin;
                 trip.Destination = tripvm.Trip.Destination;

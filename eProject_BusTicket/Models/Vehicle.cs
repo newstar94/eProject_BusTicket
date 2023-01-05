@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using eProject_BusTicket.Models;
 
-namespace eProject_BusTicket.Data
+namespace eProject_BusTicket.Models
 {
     public class Vehicle
     {
         public int VehicleID { get; set; }
         [Required]
         [Display(Name = "Số ghế")]
-        [Range(4,100)]
+        [Range(4, 100)]
         public int Seats { get; set; }
         [Required]
         [Display(Name = "Giá/km")]

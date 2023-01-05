@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace eProject_BusTicket.Data
+namespace eProject_BusTicket.Models
 {
     public class TypeofVehicle
     {

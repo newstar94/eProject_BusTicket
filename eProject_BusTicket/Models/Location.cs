@@ -12,6 +12,5 @@ namespace eProject_BusTicket.Models
         [Required]
         [Display(Name = "Tên địa điểm")]
         public string LocationName { get; set; }
-        //public string Name { get; set; }
     }
 }

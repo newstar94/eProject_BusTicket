@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Principal;
 using System.Web;
 
 namespace eProject_BusTicket.Models
@@ -19,8 +20,7 @@ namespace eProject_BusTicket.Models
         public DateTime DateTime { get; set; }
         public string Status { get; set; }
         public long TranId { get; set; }
-        public int AccountID { get; set; }
-        public virtual Account Account { get; set; }
+        public string UserID { get; set; }
         public ICollection<BookingTicket> BookingTickets { get; set; }
     }
 }

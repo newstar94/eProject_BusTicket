@@ -5,62 +5,62 @@
 }
 
 
-    <h4>TripSchedule Details</h4>
-    <hr />
-    <div class="details">
-        <div class="col-md-6">
-            <div>
-                <div class="label">
-                    Trip Code:
-                </div>
-                <div class="content">
-                    @Html.DisplayFor(model => model.TripSchedule.Trip.CodeName)
-                </div>
+<h4>TripSchedule Details</h4>
+<hr />
+<div class="details">
+    <div class="col-md-6">
+        <div>
+            <div class="label">
+                Trip Code:
             </div>
-            <div>
-                <div class="label">
-                    Departure Time:
-                </div>
-                <div class="content">
-                    @Html.DisplayFor(model => model.TripSchedule.DepartureTime)
-                </div>
-            </div>
-            <div>
-                <div class="label">
-                    Type:
-                </div>
-                <div class="content">
-                    @Html.DisplayFor(model => model.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
-                </div>
+            <div class="content">
+                @Html.DisplayFor(model => model.TripSchedule.Trip.CodeName)
             </div>
         </div>
-        <div class="col-md-6">
-            <div>
-                <div class="label">
-                    Vehicle Code:
-                </div>
-                <div class="content">
-                    @Html.DisplayFor(model => model.TripSchedule.Trip.Vehicle.Code)
-                </div>
+        <div>
+            <div class="label">
+                Departure Time:
             </div>
-            <div>
-                <div class="label">
-                    Total Distance:
-                </div>
-                <div class="content">
-                    @Model.TripSchedule.Trip.Routes.Max(r => r.Distance) km
-                </div>
+            <div class="content">
+                @Html.DisplayFor(model => model.TripSchedule.DepartureTime)
             </div>
-            <div>
-                <div class="label">
-                    Total Time:
-                </div>
-                <div class="content">
-                    @Model.TripSchedule.Trip.Routes.Max(r => r.Duration) mins
-                </div>
+        </div>
+        <div>
+            <div class="label">
+                Type:
+            </div>
+            <div class="content">
+                @Html.DisplayFor(model => model.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div>
+            <div class="label">
+                Vehicle Code:
+            </div>
+            <div class="content">
+                @Html.DisplayFor(model => model.TripSchedule.Trip.Vehicle.Code)
+            </div>
+        </div>
+        <div>
+            <div class="label">
+                Total Distance:
+            </div>
+            <div class="content">
+                @Model.TripSchedule.Trip.Routes.Max(r => r.Distance) km
+            </div>
+        </div>
+        <div>
+            <div class="label">
+                Total Time:
+            </div>
+            <div class="content">
+                @Model.TripSchedule.Trip.Routes.Max(r => r.Duration) mins
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <table class="table">

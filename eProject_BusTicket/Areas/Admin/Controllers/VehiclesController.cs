@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
-using eProject_BusTicket.Data;
+using eProject_BusTicket.Models;
 
 namespace eProject_BusTicket.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class VehiclesController : Controller
     {
-        private AppDbContext db = new AppDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
+        // GET: Identity/Vehicles
         // GET: Vehicles
         public ActionResult Index()
         {
@@ -41,8 +41,8 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 TypeofVehicle typeofVehicle = db.TypeofVehicles.Find(vehicle.TypeID);
-                vehicle.Code = typeofVehicle.Name.Substring(0,2).ToUpper() + new Random().Next(100,999).ToString();
-                vehicle.IsActive=true;
+                vehicle.Code = typeofVehicle.Name.Substring(0, 2).ToUpper() + new Random().Next(100, 999).ToString();
+                vehicle.IsActive = true;
                 db.Vehicles.Add(vehicle);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -76,8 +76,8 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
             Vehicle vehicle = db.Vehicles.Find(id);
             vehicle.Code = vehicle.Code;
             vehicle.Seats = vehicle.Seats;
-            vehicle.TypeID=vehicle.TypeID;
-            vehicle.Price= Modifiedvehicle.Price;
+            vehicle.TypeID = vehicle.TypeID;
+            vehicle.Price = Modifiedvehicle.Price;
             if (ModelState.IsValid)
             {
                 db.Entry(vehicle).State = EntityState.Modified;
