@@ -1,4 +1,4 @@
-﻿@model IEnumerable<eProject_BusTicket.Data.TypeofVehicle>
+﻿@model IEnumerable<eProject_BusTicket.Models.TypeofVehicle>
 
 @{
     ViewBag.Title = "Index";
@@ -17,12 +17,12 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-    </tr>
-}
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+        </tr>
+    }
 
 </table>

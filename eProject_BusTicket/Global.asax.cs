@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using eProject_BusTicket.Data;
+using eProject_BusTicket.Models;
 
 namespace eProject_BusTicket
 {
@@ -18,7 +18,6 @@ namespace eProject_BusTicket
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<AppDbContext>());
         }
     }
 }

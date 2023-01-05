@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using eProject_BusTicket.Data;
 using eProject_BusTicket.Models;
 using eProject_BusTicket.ViewModels;
 
 namespace eProject_BusTicket.Controllers
 {
+    [AllowAnonymous]
     public class TripSchedulesController : Controller
     {
-        private AppDbContext db = new AppDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: TripSchedules
         public ActionResult Index(int? Origin, int? Destination, DateTime? dateTime)

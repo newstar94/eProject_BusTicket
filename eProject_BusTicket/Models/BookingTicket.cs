@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
-using eProject_BusTicket.Enum;
+using eProject_BusTicket.Areas.Admin.Enum;
 
 namespace eProject_BusTicket.Models
 {

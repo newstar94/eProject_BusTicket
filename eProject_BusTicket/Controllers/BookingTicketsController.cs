@@ -1,28 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Web.Helpers;
 using System.Web.Mvc;
-using eProject_BusTicket.Data;
-using eProject_BusTicket.Enum;
+using eProject_BusTicket.Areas.Admin.Enum;
 using eProject_BusTicket.Models;
 
 namespace eProject_BusTicket.Controllers
 {
+    [Authorize(Roles = "User")]
     public class BookingTicketsController : Controller
     {
-        private AppDbContext db = new AppDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: BookingTickets
         public ActionResult Index(int? id)
         {
-            var Tickets = db.BookingsTickets.Where(t=>t.BookingID==id).Include(b => b.Booking).Include(b => b.RouteSchedule).ToList();
+            if (TempData["Cancel"] != null)
+            {
+                ViewBag.Cancel = TempData["Cancel"];
+            }
+            var Tickets = db.BookingsTickets.Where(t => t.BookingID == id||id==null).Include(b => b.Booking).Include(b => b.RouteSchedule).ToList();
             foreach (var ticket in Tickets)
             {
                 if (ticket.DepartureTime < DateTime.Now && ticket.Status == TicketStatus.NotUsedYet)
@@ -67,7 +69,7 @@ namespace eProject_BusTicket.Controllers
                 vnpay.AddRequestData("vnp_Command", "refund");
                 vnpay.AddRequestData("vnp_TmnCode", vnpTmnCode);
 
-                if (amountrf==ticket.Price)
+                if (amountrf == ticket.Price)
                 {
                     vnpay.AddRequestData("vnp_TransactionType", "03");
                 }
@@ -75,10 +77,10 @@ namespace eProject_BusTicket.Controllers
                 {
                     vnpay.AddRequestData("vnp_TransactionType", "03");
                 }
-                
+
                 vnpay.AddRequestData("vnp_CreateBy", booking.Email);
                 vnpay.AddRequestData("vnp_TxnRef", booking.BookingCode);
-                vnpay.AddRequestData("vnp_Amount", (amountrf*100).ToString());
+                vnpay.AddRequestData("vnp_Amount", (amountrf * 100).ToString());
                 vnpay.AddRequestData("vnp_OrderInfo", "REFUND ORDERID:" + booking.BookingCode);
                 vnpay.AddRequestData("vnp_TransDate", booking.DateTime.ToString("yyyyMMddHHmmss"));
                 vnpay.AddRequestData("vnp_CreateDate", createDate.ToString("yyyyMMddHHmmss"));
@@ -118,8 +120,7 @@ namespace eProject_BusTicket.Controllers
                             db.SaveChanges();
                         }
                     }
-                    db.Entry(route).State = EntityState.Modified;
-                    db.SaveChanges();
+                    TempData["Cancel"] = "Cancel success! Money will be refunded within 5 working days";
                     booking.TotalPayment -= amountrf;
                     db.Entry(booking).State = EntityState.Modified;
                     db.SaveChanges();
@@ -127,10 +128,10 @@ namespace eProject_BusTicket.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.Result = "Có lỗi sảy ra trong quá trình hoàn tiền:" + ex;
+                TempData["Cancel"] = "Have an error: " + ex;
             }
 
-            return View();
+            return RedirectToAction("Index", new { id = booking.BookingID });
         }
 
         protected override void Dispose(bool disposing)

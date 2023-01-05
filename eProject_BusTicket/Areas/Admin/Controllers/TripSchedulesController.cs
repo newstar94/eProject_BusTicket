@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using eProject_BusTicket.Data;
 using eProject_BusTicket.Models;
 using eProject_BusTicket.ViewModels;
 
 namespace eProject_BusTicket.Areas.Admin.Controllers
 {
+    
     public class TripSchedulesController : Controller
     {
-        private AppDbContext db = new AppDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: TripSchedules
+        /// GET: TripSchedules
         public ActionResult Index(int? Origin, int? Destination, DateTime? dateTime)
         {
             var origin = "";
@@ -76,6 +75,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         }
 
         // GET: TripSchedules/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewBag.TripID = new SelectList(db.Trips, "TripID", "CodeName");
@@ -156,6 +156,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         }
 
         // GET: TripSchedules/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -176,6 +177,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit([Bind(Include = "TripScheduleID,TripID,DepartureTime")] TripSchedule tripSchedule)
         {
             if (ModelState.IsValid)
@@ -189,6 +191,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         }
 
         // GET: TripSchedules/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -206,6 +209,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         // POST: TripSchedules/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirmed(int id)
         {
             TripSchedule tripSchedule = db.TripSchedules.Find(id);

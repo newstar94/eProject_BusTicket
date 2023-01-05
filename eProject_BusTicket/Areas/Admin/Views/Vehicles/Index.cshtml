@@ -1,4 +1,4 @@
-﻿@model IEnumerable<eProject_BusTicket.Data.Vehicle>
+﻿@model IEnumerable<eProject_BusTicket.Models.Vehicle>
 
 @{
     ViewBag.Title = "Index";
@@ -45,11 +45,11 @@
                 @Html.ActionLink("Edit", "Edit", new { id = item.VehicleID }) |
                 @Html.ActionLink("Details", "Details", new { id = item.VehicleID }) |
                 @Ajax.ActionLink("Delete", "Delete", new { id = item.VehicleID }, new AjaxOptions
-           {
-               Confirm = "Are you sure to delete " + @item.Code + "?",
-               OnComplete = "$('#row_" + @item.VehicleID + "').remove()",
-               HttpMethod = "Post"
-           })
+                {
+                    Confirm = "Are you sure to delete " + @item.Code + "?",
+                    OnComplete = "$('#row_" + @item.VehicleID + "').remove()",
+                    HttpMethod = "Post"
+                })
                 @*@Html.ActionLink("Delete", "Delete", new { id=item.VehicleID })*@
             </td>
         </tr>

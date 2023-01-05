@@ -1,15 +1,16 @@
-﻿using eProject_BusTicket.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using eProject_BusTicket.Models;
+using Microsoft.AspNet.Identity;
 
 namespace eProject_BusTicket.Controllers
 {
     public class HomeController : Controller
     {
-        private AppDbContext db = new AppDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
         public ActionResult Index()
         {
             ViewBag.Location = new SelectList(db.Locations, "LocationID", "LocationName");

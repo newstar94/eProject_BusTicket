@@ -17,7 +17,7 @@ namespace eProject_BusTicket
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-                namespaces: new string[]{ "eProject_BusTicket.Controllers" }
+                namespaces: new string[] { "eProject_BusTicket.Controllers" }
             );
         }
     }
