@@ -10,11 +10,17 @@ namespace eProject_BusTicket.Models
     public class Booking
     {
         public int BookingID { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Email { get; set; }
+        [Required]
+        [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
         [DisplayFormat(DataFormatString = "{0:N0}")]
+        [Display(Name = "Total Payment")]
         public decimal TotalPayment { get; set; }
+        [Display(Name = "Booking Code")]
         public string BookingCode { get; set; }
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd/MM/yyyy}")]
         public DateTime DateTime { get; set; }

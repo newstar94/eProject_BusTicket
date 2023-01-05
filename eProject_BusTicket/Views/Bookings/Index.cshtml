@@ -1,18 +1,15 @@
 ﻿@model IEnumerable<eProject_BusTicket.Models.Booking>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Order";
 }
 
-<h2>Index</h2>
+<h2 style="text-align: center">Order</h2>
 
 <table class="table">
     <tr>
-        @*<th>
-            @Html.DisplayNameFor(model => model.Account.Username)
-        </th>*@
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            Buyer Name
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Email)

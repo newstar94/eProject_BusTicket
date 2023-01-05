@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using eProject_BusTicket.Areas.Admin.Enum;
 using eProject_BusTicket.Models;
+using Microsoft.AspNet.Identity;
 
 namespace eProject_BusTicket.Controllers
 {
@@ -24,8 +25,25 @@ namespace eProject_BusTicket.Controllers
             {
                 ViewBag.Cancel = TempData["Cancel"];
             }
-            var Tickets = db.BookingsTickets.Where(t => t.BookingID == id||id==null).Include(b => b.Booking).Include(b => b.RouteSchedule).ToList();
-            foreach (var ticket in Tickets)
+
+            List<BookingTicket> tickets = new List<BookingTicket>();
+            if (id==null)
+            {
+                var userId= User.Identity.GetUserId();
+                var bookings = db.Bookings.Where(b => b.UserID == userId).ToList();
+                var ticketlist = db.BookingsTickets.ToList();
+                foreach (var booking in bookings)
+                {
+                    tickets.AddRange(ticketlist.Where(t => t.BookingID == booking.BookingID).ToList());
+                }
+            }
+            else
+            {
+                tickets = db.BookingsTickets.Where(t => t.BookingID == id)
+                    .Include(b => b.Booking).Include(b => b.RouteSchedule).ToList();
+            }
+            
+            foreach (var ticket in tickets)
             {
                 if (ticket.DepartureTime < DateTime.Now && ticket.Status == TicketStatus.NotUsedYet)
                 {
@@ -34,7 +52,7 @@ namespace eProject_BusTicket.Controllers
                     db.SaveChanges();
                 }
             }
-            return View(Tickets.ToList());
+            return View(tickets);
         }
 
         public ActionResult Cancel(int? id)
