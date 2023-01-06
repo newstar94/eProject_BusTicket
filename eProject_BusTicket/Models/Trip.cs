@@ -10,16 +10,17 @@ namespace eProject_BusTicket.Models
     {
         public int TripID { get; set; }
         [Required]
-        [Display(Name = "Mã chuyến")]
+        [Display(Name = "Trip Code")]
         public string CodeName { get; set; }
         public int VehicleID { get; set; }
         public virtual Vehicle Vehicle { get; set; }
         [Required]
-        [Display(Name = "Đầu tuyến")]
+        [Display(Name = "Origin")]
         public string Origin { set; get; }
         [Required]
-        [Display(Name = "Cuối tuyến")]
+        [Display(Name = "Destination")]
         public string Destination { set; get; }
+        [Display(Name = "Status")]
         public bool IsActive { set; get; }
         public virtual ICollection<Station> Stations { get; set; }
         public virtual ICollection<Route> Routes { get; set; }

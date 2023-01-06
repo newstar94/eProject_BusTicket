@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<eProject_BusTicket.ViewModels.TripSVM>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Trip Schedule";
 }
 
-<h2>Index</h2>
+<h2>Trip Schedule</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", "", new { @class = "btn btn-success" })
 </p>
 
 @using (Html.BeginForm())
@@ -32,7 +32,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Search" class="btn btn-default" />
+            <input type="submit" value="Search" class="btn btn-primary" />
         </div>
     </div>
 }
@@ -58,20 +58,20 @@
             @Html.DisplayNameFor(model => model.TripSchedule.Trip.Vehicle.Code)
         </th>
         <th>
-            Chiều dài chuyến
+            Distance
         </th>
         <th>
-            Tổng thời gian chuyến
+            Time
         </th>
         <th>
-            Số điểm đón/trả khách
+            Pick up points
         </th>
-        <th></th>
+        <th>Action</th>
     </tr>
 
     @foreach (var item in Model)
     {
-        <tr>
+        <tr id="row_@item.TripSchedule.TripScheduleID">
             <td>
                 @Html.DisplayFor(modelItem => item.TripSchedule.Trip.CodeName)
             </td>
@@ -94,17 +94,61 @@
                 @item.TripSchedule.Trip.Routes.Max(r => r.Distance) km
             </td>
             <td>
-                @item.TripSchedule.Trip.Routes.Max(r => r.Duration) phút
+                @if (item.Stations.Count > 2)
+                {
+                    <span>
+                        @(item.TripSchedule.Trip.Routes.Max(r => r.Duration) + (item.Stations.Count - 2) * 7) mins
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        @(@item.TripSchedule.Trip.Routes.Max(r => r.Duration)) mins
+                    </span>
+                }
             </td>
             <td>
                 @item.Stations.Count()
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.TripSchedule.TripScheduleID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.TripSchedule.TripScheduleID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.TripSchedule.TripScheduleID })
+                @Html.ActionLink("Details", "Details", new { id = item.TripSchedule.TripScheduleID }, new { @class = "btn btn-info", @style = "margin-right: 10px " })
+                @{
+                    var check = true;
+                    foreach (var route in item.RouteSchedules)
+                    {
+                        if (route.AvaiableSeat < route.Route.Trip.Vehicle.Seats)
+                        {
+                            check = false;
+                            break;
+                        }
+
+                    }
+                    if (check)
+                    {
+                        @Ajax.ActionLink("Delete", "Delete", new { id = item.TripSchedule.TripScheduleID }, new AjaxOptions
+                        {
+                            Confirm = "Are you sure to delete " + @item.TripSchedule.TripScheduleCode + "?",
+                            OnComplete = "$('#row_" + @item.TripSchedule.TripScheduleID + "').remove()",
+                            HttpMethod = "Post"
+                        }, new { @class = "btn btn-danger" })
+                    }
+                }
+
+
             </td>
         </tr>
     }
-
 </table>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $("#Origin").on('change', function () {
+        $('#Destination').children().remove().end();
+        jQuery("#Origin option").each(function () {
+            if (jQuery(this).val() != $('#Origin').val()) {
+                if ($(this).val() != "") {
+                    $('#Destination').append('<option value=' + jQuery(this).val() + '>' + jQuery(this).text() + '</option>');
+                }
+            }
+        });
+    });
+</script>

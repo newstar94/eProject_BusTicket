@@ -2,67 +2,94 @@
 @model eProject_BusTicket.ViewModels.TripVM
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Trip Details";
 }
 
-<h2>Details</h2>
+<style type="text/css">
+    .details {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 15px;
+    }
+
+    b {
+        display: inline-block;
+        font-size: 16px;
+    }
+</style>
+
+<h2> Trip Details</h2>
 
 <div>
-    <h4>Trip</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Trip.Vehicle.Code)
-        </dt>
+    <div class="details">
+        <div class="col-md-6">
+            <div>
+                <b>Vehicle Code:</b>
+                @Html.DisplayFor(model => model.Trip.Vehicle.Code)
+            </div>
+            <div>
+                <b>Trip Code:</b>
+                @Html.DisplayFor(model => model.Trip.CodeName)
+            </div>
+            <div>
+                <b>Type:</b>
+                @Html.DisplayFor(model => model.Trip.Vehicle.TypeofVehicle.Name)
+            </div>
+            <div>
+                <b>Seats:</b>
+                @Html.DisplayFor(model => model.Trip.Vehicle.Seats)
+            </div>
+            <div>
+                <b>Price/km</b>
+                @Html.DisplayFor(model => model.Trip.Vehicle.Price)
+            </div>
+            <div>
+                <b>Distance</b>
+                @Html.DisplayFor(model => model.Routes[0].Distance) km
+            </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Trip.Vehicle.Code)
-        </dd>
+        </div>
+        <div class="col-md-6">
+            <div>
+                <b>Time</b>
+                @if (Model.Stations.Count > 2)
+                {
+                    <span>
+                        @(Model.Routes[0].Duration + (Model.Stations.Count - 2) * 7) mins
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        @(Model.Routes[0].Duration) mins
+                    </span>
+                }
+            </div>
+            <div>
+                <b>Origin:</b>
+                @Html.DisplayFor(model => model.Trip.Origin)
+            </div>
+            <div>
+                <b>Destination:</b>
+                @Html.DisplayFor(model => model.Trip.Destination)
+            </div>
+            <div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Trip.CodeName)
-        </dt>
+                <b>Stations:</b>
+                <ol>
+                    @foreach (var station in Model.Stations)
+                    {
+                        <li>
+                            @station.StationAdress
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Trip.CodeName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Trip.Origin)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Trip.Origin)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Trip.Destination)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Trip.Destination)
-        </dd>
-
-        <dt>
-            Điểm đón khách
-        </dt>
-
-        <dd>
-            @Html.DropDownList("Start", ViewBag.Station as SelectList)
-        </dd>
-
-        <dt>
-            Điểm trả khách
-        </dt>
-
-        <dd>
-            @Html.DropDownList("Start", ViewBag.Station as SelectList)
-        </dd>
-
-    </dl>
+    </div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Trip.TripID }) |
     @Html.ActionLink("Back to List", "Index")
-    @*@Html.ActionLink("Select", "Booking", "Bookings", new { id = Model.Routes[i] }, "")*@
 </p>

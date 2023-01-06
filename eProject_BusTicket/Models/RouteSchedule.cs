@@ -13,10 +13,10 @@ namespace eProject_BusTicket.Models
         public string RouteScheduleCode { get; set; }
         public int RouteID { get; set; }
         public virtual Route Route { get; set; }
-        [Display(Name = "Số ghế trống")]
+        [Display(Name = "Avaiable Seats")]
         public int AvaiableSeat { get; set; }
         [DisplayFormat(DataFormatString = "{0:HH:mm dd/MM/yyyy}")]
-        [Display(Name = "Thời gian khởi hành")]
+        [Display(Name = "Departure Time")]
         public DateTime DepartureTime { get; set; }
     }
 }

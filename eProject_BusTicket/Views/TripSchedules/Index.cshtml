@@ -82,7 +82,18 @@
                     @item.TripSchedule.Trip.Routes.Max(r => r.Distance) km
                 </td>
                 <td>
-                    @item.TripSchedule.Trip.Routes.Max(r => r.Duration) mins
+                    @if (item.Stations.Count > 2)
+                    {
+                        <span>
+                            @(item.TripSchedule.Trip.Routes.Max(r => r.Duration) + (item.Stations.Count - 2) * 7) mins
+                        </span>
+                    }
+                    else
+                    {
+                        <span>
+                            @(@item.TripSchedule.Trip.Routes.Max(r => r.Duration)) mins
+                        </span>
+                    }
                 </td>
                 <td>
                     @item.Stations.Count()

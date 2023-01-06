@@ -24,9 +24,15 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/Home">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/BookingTickets/Index">View Tickets</a>
-                    </li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Bookings/Index">Bookings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/BookingTickets/Index">Tickets</a>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link" href="/Home/About">About</a>
                     </li>
@@ -46,10 +52,13 @@
         <hr />
 
     </section>
-    <footer class="container">
-        <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-    </footer>
-    @Scripts.Render("~/bundles/jquery")
+<footer class="container">
+    <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+</footer>
+<script src="/Areas/Admin/Assets/vendor/jquery/jquery.min.js"></script>
+<script src="/Areas/Admin/Assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+@Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>

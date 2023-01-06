@@ -8,18 +8,19 @@ namespace eProject_BusTicket.Models
 {
     public class Vehicle
     {
+        [Display(Name = "Vehicle")]
         public int VehicleID { get; set; }
         [Required]
-        [Display(Name = "Số ghế")]
+        [Display(Name = "Seats")]
         [Range(4, 100)]
         public int Seats { get; set; }
         [Required]
-        [Display(Name = "Giá/km")]
+        [Display(Name = "Price/km")]
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal Price { get; set; }
-        [Display(Name = "Trạng thái")]
+        [Display(Name = "Status")]
         public bool IsActive { get; set; }
-        [Display(Name = "Mã xe")]
+        [Display(Name = "Vehicle Code")]
         public string Code { get; set; }
         public int TypeID { get; set; }
         public virtual TypeofVehicle TypeofVehicle { get; set; }

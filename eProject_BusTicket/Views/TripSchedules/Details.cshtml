@@ -56,7 +56,18 @@
                 Total Time:
             </div>
             <div class="content">
-                @Model.TripSchedule.Trip.Routes.Max(r => r.Duration) mins
+                @if (Model.Stations.Count > 2)
+                {
+                    <span>
+                        @(Model.TripSchedule.Trip.Routes.Max(r => r.Duration) + (Model.Stations.Count - 2) * 7) mins
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        @(Model.TripSchedule.Trip.Routes.Max(r => r.Duration)) mins
+                    </span>
+                }
             </div>
         </div>
     </div>

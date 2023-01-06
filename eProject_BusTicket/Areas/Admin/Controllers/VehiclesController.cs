@@ -5,7 +5,9 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using eProject_BusTicket.Areas.Admin.ViewModels;
 using eProject_BusTicket.Models;
+using eProject_BusTicket.ViewModels;
 
 namespace eProject_BusTicket.Areas.Admin.Controllers
 {
@@ -22,11 +24,24 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
             return View(vehicles.ToList());
         }
 
+
+        public JsonResult Getvehicle(int VehicleID)
+        {
+            db.Configuration.ProxyCreationEnabled = false;
+            Vehicle vehicle = db.Vehicles.Find(VehicleID);
+            VehicleVM vehicleVm = new VehicleVM();
+            vehicleVm.Code = vehicle.Code;
+            vehicleVm.Price = vehicle.Price;
+            var type = db.TypeofVehicles.Find(vehicle.TypeID);
+            vehicleVm.Type = type.Name;
+            vehicleVm.Seats = vehicle.Seats;
+            return Json(vehicleVm, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: Vehicles/Create
         public ActionResult Create()
         {
-
-            ViewBag.TypeID = new SelectList(db.TypeofVehicles, "TypeID", "Name");
+            ViewBag.TypeID = new SelectList(db.TypeofVehicles.Where(t=>t.IsActive==true), "TypeID", "Name");
             return View();
         }
 
@@ -37,7 +52,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "VehicleID,Seats,Price,Code,TypeID")] Vehicle vehicle)
         {
-            ViewBag.TypeID = new SelectList(db.TypeofVehicles, "TypeID", "Name", vehicle.TypeID);
+            ViewBag.TypeID = new SelectList(db.TypeofVehicles.Where(t => t.IsActive == true), "TypeID", "Name", vehicle.TypeID);
             if (ModelState.IsValid)
             {
                 TypeofVehicle typeofVehicle = db.TypeofVehicles.Find(vehicle.TypeID);
@@ -71,7 +86,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "VehicleID,Seats,Price,Code,TypeID")] int? id, Vehicle Modifiedvehicle)
+        public ActionResult Edit([Bind(Include = "VehicleID,Seats,Price,Code,TypeID,IsActive")] int? id, Vehicle Modifiedvehicle)
         {
             Vehicle vehicle = db.Vehicles.Find(id);
             vehicle.Code = vehicle.Code;
@@ -84,18 +99,18 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.TypeID = new SelectList(db.TypeofVehicles, "TypeID", "Name", vehicle.TypeID);
+            ViewBag.TypeID = new SelectList(db.TypeofVehicles.Where(t => t.IsActive == true), "TypeID", "Name", vehicle.TypeID);
             return View(vehicle);
         }
 
-        // Delete: Vehicles/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id)
+        public JsonResult ChangeStatus(int id)
         {
-            Vehicle vehicle = db.Vehicles.Find(id);
-            db.Vehicles.Remove(vehicle);
+            var vehicle = db.Vehicles.Find(id);
+            vehicle.IsActive = !vehicle.IsActive;
+            db.Entry(vehicle).State = EntityState.Modified;
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return Json(vehicle.IsActive);
         }
 
         protected override void Dispose(bool disposing)

@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<eProject_BusTicket.Models.Vehicle>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Vehicle";
 }
 
-<h2>Index</h2>
+<h2>Vehicle</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", "", new { @class = "btn btn-success" })
 </p>
 <table class="table">
     <tr>
@@ -23,7 +23,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Code)
         </th>
-        <th></th>
+        <th>
+            Status
+        </th>
     </tr>
 
     @foreach (var item in Model)
@@ -42,17 +44,48 @@
                 @Html.DisplayFor(modelItem => item.Code)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.VehicleID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.VehicleID }) |
-                @Ajax.ActionLink("Delete", "Delete", new { id = item.VehicleID }, new AjaxOptions
-                {
-                    Confirm = "Are you sure to delete " + @item.Code + "?",
-                    OnComplete = "$('#row_" + @item.VehicleID + "').remove()",
-                    HttpMethod = "Post"
-                })
-                @*@Html.ActionLink("Delete", "Delete", new { id=item.VehicleID })*@
+                <button class="status" data-id=@item.VehicleID>@(item.IsActive ? "Active" : "Disable")</button>
+            </td>
+            <td>
+                <button id="btn_@item.VehicleID" style="display:  @(item.IsActive ? "block" : "none")" class="btn btn-warning edit"><a style="color: aliceblue" href="/Admin/Vehicles/Edit/@item.VehicleID"> <i class="far fa-edit"></i></a></button>
             </td>
         </tr>
     }
 
 </table>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    const statuslist = document.getElementsByClassName('status');
+    for (const status of statuslist) {
+        if (status.textContent == 'Active') {
+            status.classList.add('btn', 'btn-success');
+        } else if (status.textContent == 'Disable') {
+            status.classList.add('btn', 'btn-danger');
+        }
+    }
+
+    $('.status').on('click',
+        function () {
+            var btn = $(this)
+            var id = $(this).data('id');
+            var editid = "btn_" + id;
+            var edit = document.getElementById(editid);
+            $.ajax({
+                url: "/Vehicles/ChangeStatus",
+                data: { id: id },
+                dataType: "json",
+                type: "Post",
+                success: function (response) {
+                    if (response == true) {
+                        btn.text('Active');
+                        btn.removeClass("btn-danger").addClass("btn-success");
+                        edit.style.display = "block";
+                    } else {
+                        btn.text('Disable');
+                        btn.removeClass("btn-success").addClass("btn-danger");
+                        edit.style.display = "none";
+                    }
+                }
+            });
+        });
+</script>

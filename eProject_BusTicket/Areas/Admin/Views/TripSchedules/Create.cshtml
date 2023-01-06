@@ -1,44 +1,105 @@
 ﻿@model eProject_BusTicket.Models.TripSchedule
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "TripSchedule";
 }
+<style type="text/css">
+    .details {
+        display: flex;
+        padding-bottom: 15px;
+    }
 
-<h2>Create</h2>
+    b {
+        display: inline-block;
+        font-size: 16px;
+        padding-right: 5px;
+    }
+</style>
 
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<div class="row">
+    <div class="col-md-6">
+        <h2 style="display: inline;">
+            Create
+        </h2>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h4>TripSchedule</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.TripID, "TripID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("TripID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TripID, "", new { @class = "text-danger" })
+            <div class="form-horizontal">
+                <hr/>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TripID, "Trip", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("TripID", null, "Select Trip", htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TripID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DepartureTime, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.DepartureTime, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local", @min = DateTime.Now.ToString("yyyy-MM-dd HH:mm") } })
+                        @Html.ValidationMessageFor(model => model.DepartureTime, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-success"/>
+                    </div>
+                </div>
             </div>
-        </div>
+        }
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DepartureTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DepartureTime, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local", @min = DateTime.Now.ToString("yyyy-MM-dd HH:mm") } })
-                @Html.ValidationMessageFor(model => model.DepartureTime, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+    <div class="col-md-6" id="TripDetails" style="display: none">
+        <div>
+            <h2>Trip Details</h2>
+            <hr />
+            <div class="row" style="transform: translateX(12px)">
+                <div class="col-md-4">
+                    <div class="row">
+                        <b>Vehicle Code: </b>
+                        <div id="VehicleCode"></div>
+                    </div>
+                    <div class="row">
+                        <b>Trip Code: </b>
+                        <div id="TripCode"></div>
+                    </div>
+                    <div class="row">
+                        <b>Type: </b>
+                        <div id="Type"></div>
+                    </div>
+                    <div class="row">
+                        <b>Seats: </b>
+                        <div id="Seats"></div>
+                    </div>
+                    <div class="row">
+                        <b>Price/km: </b>
+                        <div id="Price"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <b>Origin: </b>
+                        <div id="Origin"></div>
+                    </div>
+                    <div class="row">
+                        <b>Destination: </b>
+                        <div id="Destination"></div>
+                    </div>
+                    <div>
+                        <div class="row"><b>Stations:</b></div>
+                        <ol id="Stations">
+                        </ol>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-}
-
+</div>
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
@@ -46,3 +107,33 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    document.getElementById("TripID").onchange = function () {
+        var TripID = this.value;
+        var url = '/Admin/TripSchedules/Gettrip';
+        $.ajax({
+            url: url,
+            data: { TripID: TripID },
+            type: 'Get',
+            success: function (result) {
+                var trip = document.getElementById("TripDetails");
+                trip.style.display = "block";
+                document.getElementById("VehicleCode").innerHTML = result.VehicleCode;
+                document.getElementById("TripCode").innerHTML = result.TripCode;
+                document.getElementById("Seats").innerHTML = result.Seats;
+                document.getElementById("Type").innerHTML = result.Type;
+                document.getElementById("Price").innerHTML = new Intl.NumberFormat().format(result.Price);
+                document.getElementById("Origin").innerHTML = result.Origin;
+                document.getElementById("Destination").innerHTML = result.Destination;
+                var ol = document.getElementById("Stations");
+                ol.innerHTML = "";
+                result.StationList.forEach((station) => {
+                    const li = document.createElement('li');
+                    li.textContent = station;
+                    ol.appendChild(li);
+                });
+            }
+        });
+    };
+</script>

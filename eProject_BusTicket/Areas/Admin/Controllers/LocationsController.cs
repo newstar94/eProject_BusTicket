@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -32,6 +33,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                location.IsActive=true;
                 db.Locations.Add(location);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -39,6 +41,18 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
 
             return View(location);
         }
+
+        [HttpPost]
+        public JsonResult ChangeStatus(int id)
+        {
+            var location = db.Locations.Find(id);
+            location.IsActive=!location.IsActive;
+            db.Entry(location).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return Json(location.IsActive);
+        }
+
 
         protected override void Dispose(bool disposing)
         {

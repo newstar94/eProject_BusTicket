@@ -12,9 +12,8 @@ namespace eProject_BusTicket.Models
         public string TripScheduleCode { get; set; }
         public int TripID { get; set; }
         public virtual Trip Trip { get; set; }
-        public bool IsActive { get; set; }
         [DisplayFormat(DataFormatString = "{0:HH:mm dd/MM/yyyy}")]
-        [Display(Name = "Thời gian khởi hành")]
+        [Display(Name = "Departure Time")]
         public DateTime DepartureTime { get; set; }
         public DateTime Date { get; set; }
     }

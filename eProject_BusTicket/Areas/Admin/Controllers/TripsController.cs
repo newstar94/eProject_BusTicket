@@ -47,24 +47,24 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
             }
             TripVM tripvm = new TripVM();
             tripvm.Trip = trip;
-            var stations = db.Stations.Where(st => st.TripID == trip.TripID);
-            ViewBag.Station = new SelectList(stations, "StationId", "StationAdress");
+            var stations = db.Stations.Where(st => st.TripID == trip.TripID).ToList();
+            tripvm.Routes=db.Routes.Where(r => r.TripID==trip.TripID).ToList();
+            tripvm.Stations = stations;
             return View(tripvm);
         }
 
         public JsonResult Getvehicle(int TypeID)
         {
             db.Configuration.ProxyCreationEnabled = false;
-            var vehicles = db.Vehicles.Where(v => v.TypeID == TypeID).ToList();
-            return Json(vehicles, JsonRequestBehavior.AllowGet);
+            var vehicle = db.Vehicles.Find(TypeID);
+            return Json(vehicle, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Trips/Create
         public ActionResult Create()
         {
             ViewBag.VehicleID = new SelectList(db.Vehicles.Where(v => v.IsActive == true), "VehicleID", "Code");
-            ViewBag.Location = new SelectList(db.Locations, "LocationID", "LocationName");
-            ViewBag.TypeID = new SelectList(db.TypeofVehicles, "TypeID", "Name");
+            ViewBag.Location = new SelectList(db.Locations.Where(l=>l.IsActive==true), "LocationID", "LocationName");
             return View();
         }
 
@@ -124,63 +124,14 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
             return View(tripvm);
         }
 
-        // GET: Trips/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Trip trip = db.Trips.Find(id);
-            if (trip == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.VehicleID = new SelectList(db.Vehicles, "VehicleID", "Code", trip.VehicleID);
-            return View(trip);
-        }
-
-        // POST: Trips/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "TripID,Name,VehicleID,Origin,Destination")] Trip trip)
+        public JsonResult ChangeStatus(int id)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(trip).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.VehicleID = new SelectList(db.Vehicles, "VehicleID", "Code", trip.VehicleID);
-            return View(trip);
-        }
-
-        // GET: Trips/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Trip trip = db.Trips.Find(id);
-            if (trip == null)
-            {
-                return HttpNotFound();
-            }
-            return View(trip);
-        }
-
-        // POST: Trips/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Trip trip = db.Trips.Find(id);
-            db.Trips.Remove(trip);
+            var trip = db.Trips.Find(id);
+            trip.IsActive = !trip.IsActive;
+            db.Entry(trip).State = EntityState.Modified;
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return Json(trip.IsActive);
         }
 
         protected override void Dispose(bool disposing)

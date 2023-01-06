@@ -2,96 +2,111 @@
 @model eProject_BusTicket.ViewModels.TripVM
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Create Trip";
 }
+<h2>Create Trip</h2>
+<div style="display: flex">
+    <div class="col-md-6">
+        @using (Html.BeginForm())
+        {
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<h2>Create</h2>
+                @*Chọn xe*@
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Trip.VehicleID, "VehicleID", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("VehicleID", ViewBag.VehicleID as SelectList,"Select Vehicle", htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Trip.VehicleID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Trip.CodeName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input class="form-control text-box single-line" id="CodeName" name="CodeName" type="text" value="">
+                        @Html.ValidationMessageFor(model => model.Trip.CodeName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-@using (Html.BeginForm())
-{
-    <div class="form-horizontal">
-        <h4>Create Trip</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @*Điểm đi*@
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Trip.Origin, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("Origin", ViewBag.Location as SelectList, "Select Origin", htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Trip.Origin, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        @*Chọn loại xe*@
-        <div class="form-group">
-            <label class="control-label col-md-2">TypeID</label>
-            <div class="col-md-10">
-                @Html.DropDownList("TypeID", null, htmlAttributes: new { @class = "form-control" })
+                @*Điểm đến*@
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Trip.Destination, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("Destination", ViewBag.Location as SelectList, "Select Destination", htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Trip.Destination, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                @*Trạm dừng*@
+                <div class="form-group">
+                    <label class="control-label col-md-2">Station</label>
+                    <div class="col-md-10">
+                        <input name="station" id="station" class="text-box single-line" />
+                        <button id="addStation" type="button" class="btn btn-success">Add Station</button>
+                        <span id="alert" style="color: red"></span>
+                    </div>
+                </div>
+
+                @*Danh sách trạm dừng sẽ thêm*@
+                <h4>Stations</h4>
+                <ol id="stationlist" class="col-md-offset-1 col-md-10">
+                </ol>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input id="create" type="button" value="Create" class="btn btn-success" />
+                    </div>
+                </div>
+
             </div>
-        </div>
-
-        @*Chọn xe*@
-        <div class="form-group">
-            @Html.LabelFor(model => model.Trip.VehicleID, "VehicleID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("VehicleID", ViewBag.VehicleID as SelectList, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Trip.VehicleID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Trip.CodeName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input class="form-control text-box single-line" id="CodeName" name="CodeName" type="text" value="">
-                @Html.ValidationMessageFor(model => model.Trip.CodeName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        @*Điểm đi*@
-        <div class="form-group">
-            @Html.LabelFor(model => model.Trip.Origin, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("Origin", ViewBag.Location as SelectList, "Select Origin", htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Trip.Origin, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        @*Điểm đến*@
-        <div class="form-group">
-            @Html.LabelFor(model => model.Trip.Destination, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("Destination", ViewBag.Location as SelectList, "Select Destination", htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Trip.Destination, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        @*Trạm dừng*@
-        <div class="form-group">
-            <label class="control-label col-md-2">Station</label>
-            <div class="col-md-10">
-                <input name="station" id="station" class="text-box single-line" />
-                <button id="addStation" type="button" class="btn btn-success">Add Station</button>
-                <span id="alert" style="color: red"></span>
-            </div>
-        </div>
-
-        @*Danh sách trạm dừng sẽ thêm*@
-        <h4>Stations</h4>
-        <ol id="stationlist" class="col-md-offset-1 col-md-10">
-        </ol>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input id="create" type="button" value="Create" class="btn btn-default" />
-            </div>
-        </div>
-
+            <table class="table" style="display: none">
+                <thead>
+                    <tr>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Duration</th>
+                        <th>Distance</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable"></tbody>
+            </table>
+        }
     </div>
-    <table class="table" style="display: none">
-        <thead>
-            <tr>
-                <th>Start</th>
-                <th>End</th>
-                <th>Duration</th>
-                <th>Distance</th>
-            </tr>
 
-        </thead>
-        <tbody id="myTable"></tbody>
-    </table>
-}
+
+    <div class="col-md-6" id="VehicleDetails" style="display: none">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Vehicle Code</th>
+                    <th>Type</th>
+                    <th>Seats</th>
+                    <th>Price/km</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="code">Vehicle Code</td>
+                    <td id="type">Type of Vehicle</td>
+                    <td id="seats">Seats</td>
+                    <td id="price">Price/km</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -256,5 +271,25 @@
             });
         }, 1200);  // the function will be executed after 1000 milliseconds (1 second)
     });
+
+
+    document.getElementById("VehicleID").onchange = function () {
+        var VehicleID = this.value;
+        var url = '/Vehicles/Getvehicle';
+        $.ajax({
+            url: url,
+            data: { VehicleID: VehicleID },
+            type: 'Get',
+            success: function (result) {
+                var vehicle = document.getElementById("VehicleDetails");
+                vehicle.style.display = "block";
+                document.getElementById("code").innerHTML = result.Code;
+                document.getElementById("type").innerHTML = result.Type;
+                document.getElementById("seats").innerHTML = result.Seats;
+                document.getElementById("price").innerHTML = new Intl.NumberFormat().format(result.Price);
+            }
+        });
+    };
+
 
 </script>

@@ -10,7 +10,7 @@ using eProject_BusTicket.ViewModels;
 
 namespace eProject_BusTicket.Areas.Admin.Controllers
 {
-    
+    [Authorize(Roles = "Admin")]
     public class TripSchedulesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -36,7 +36,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
                 .Where(t => t.Trip.Origin == origin || Origin == null)
                 .Where(t => t.Trip.Destination == destination || Destination == null)
                 .Where(t => t.Date == dateTime || dateTime == null)
-                .Include(t => t.Trip);
+                .Include(t => t.Trip).ToList();
             var routeSchedules = db.RouteSchedules.ToList();
             var stations = db.Stations.ToList();
 
@@ -75,23 +75,19 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         }
 
         // GET: TripSchedules/Create
-        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
-            ViewBag.TripID = new SelectList(db.Trips, "TripID", "CodeName");
+            ViewBag.TripID = new SelectList(db.Trips.Where(t => t.IsActive == true), "TripID", "CodeName");
             return View();
         }
 
-        // POST: TripSchedules/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "TripScheduleID,TripID,DepartureTime")] TripSchedule tripSchedule)
         {
             if (ModelState.IsValid)
             {
-                tripSchedule.IsActive = true;
                 var trip = db.Trips.Find(tripSchedule.TripID);
                 tripSchedule.TripScheduleCode = trip.CodeName + tripSchedule.DepartureTime.ToString("ddMMyyHHmm");
                 tripSchedule.Date = tripSchedule.DepartureTime.Date;
@@ -155,65 +151,35 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
             return View(tripSchedule);
         }
 
-        // GET: TripSchedules/Edit/5
-        [Authorize(Roles = "Admin")]
-        public ActionResult Edit(int? id)
+        public JsonResult Gettrip(int TripID)
         {
-            if (id == null)
+            db.Configuration.ProxyCreationEnabled = false;
+            var trip = db.Trips.Find(TripID);
+            var stations = db.Stations.Where(s => s.TripID == trip.TripID).ToList();
+            List<string> StationList = new List<string>();
+            foreach (var station in stations)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                StationList.Add(station.StationAdress);
             }
-            TripSchedule tripSchedule = db.TripSchedules.Find(id);
-            if (tripSchedule == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.TripID = new SelectList(db.Trips.Where(t => t.IsActive == true), "TripID", "CodeName", tripSchedule.TripID);
-            return View(tripSchedule);
+            TripVM tripVm = new TripVM();
+            tripVm.Destination = trip.Destination;
+            tripVm.Origin = trip.Origin;
+            tripVm.TripCode = trip.CodeName;
+            var vehicle = db.Vehicles.Find(trip.VehicleID);
+            tripVm.Price = vehicle.Price;
+            tripVm.Seats = vehicle.Seats;
+            tripVm.VehicleCode = vehicle.Code;
+            var type = db.TypeofVehicles.Find(vehicle.TypeID);
+            tripVm.Type = type.Name;
+            tripVm.StationList = StationList;
+            return Json(tripVm, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: TripSchedules/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public ActionResult Edit([Bind(Include = "TripScheduleID,TripID,DepartureTime")] TripSchedule tripSchedule)
+        public ActionResult Delete(int id)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(tripSchedule).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.TripID = new SelectList(db.Trips.Where(t => t.IsActive == true), "TripID", "CodeName", tripSchedule.TripID);
-            return View(tripSchedule);
-        }
-
-        // GET: TripSchedules/Delete/5
-        [Authorize(Roles = "Admin")]
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            TripSchedule tripSchedule = db.TripSchedules.Find(id);
-            if (tripSchedule == null)
-            {
-                return HttpNotFound();
-            }
-            return View(tripSchedule);
-        }
-
-        // POST: TripSchedules/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            TripSchedule tripSchedule = db.TripSchedules.Find(id);
-            db.TripSchedules.Remove(tripSchedule);
+            TripSchedule trip = db.TripSchedules.Find(id);
+            db.TripSchedules.Remove(trip);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

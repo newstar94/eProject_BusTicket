@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<eProject_BusTicket.ViewModels.TripVM>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Trip";
 }
 
-<h2>Index</h2>
+<h2>Trip</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create","",new {@class="btn btn-success"})
 </p>
 <table class="table">
     <tr>
@@ -27,18 +27,18 @@
             @Html.DisplayNameFor(model => model.Trip.Destination)
         </th>
         <th>
-            Chiều dài chuyến
+            Distance
         </th>
         <th>
-            Tổng thời gian chuyến
+            Time
         </th>
         <th>
-            Số điểm đón/trả khách
+            Pick up points
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Trip.IsActive)
         </th>
-        <th></th>
+        <th>Action</th>
     </tr>
     @foreach (var item in Model)
     {
@@ -62,19 +62,60 @@
                 @item.Routes.Max(r => r.Distance) km
             </td>
             <td>
-                @item.Routes.Max(r => r.Duration) phút
+                @if (item.Stations.Count > 2)
+                {
+                    <span>
+                        @(item.Routes[0].Duration + (item.Stations.Count - 2) * 7) mins
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        @(item.Routes[0].Duration) mins
+                    </span>
+                }
             </td>
             <td>
                 @item.Stations.Count()
             </td>
             <td>
-                @(item.Trip.IsActive ? "Hoạt động" : "Tạm ngưng")
+                <button class="status" data-id=@item.Trip.TripID>@(item.Trip.IsActive ? "Active" : "Disable")</button>
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Trip.TripID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Trip.TripID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Trip.TripID })
+                @Html.ActionLink("Details", "Details", new { id = item.Trip.TripID }, new { @class="btn btn-info"})
             </td>
         </tr>
     }
 </table>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    const statuslist = document.getElementsByClassName('status');
+    for (const status of statuslist) {
+        if (status.textContent == 'Active') {
+            status.classList.add('btn', 'btn-success');
+        } else if (status.textContent == 'Disable') {
+            status.classList.add('btn', 'btn-danger');
+        }
+    }
+
+    $('.status').on('click',
+        function () {
+            var btn = $(this)
+            var id = $(this).data('id');
+            $.ajax({
+                url: "/Trips/ChangeStatus",
+                data: { id: id },
+                dataType: "json",
+                type: "Post",
+                success: function (response) {
+                    if (response == true) {
+                        btn.text('Active');
+                        btn.removeClass("btn-danger").addClass("btn-success");
+                    } else {
+                        btn.text('Disable');
+                        btn.removeClass("btn-success").addClass("btn-danger");
+                    }
+                }
+            });
+        });
+</script>

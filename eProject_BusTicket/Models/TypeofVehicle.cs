@@ -9,10 +9,13 @@ namespace eProject_BusTicket.Models
     public class TypeofVehicle
     {
         [Key]
+        [Display(Name = "Type")]
         public int TypeID { get; set; }
         [Required]
-        [Display(Name = "Loại xe")]
+        [Display(Name = "Type")]
         public string Name { get; set; }
+        [Display(Name = "Status")]
+        public bool IsActive { get; set; }
         public ICollection<Vehicle> Vehicles { get; set; }
     }
 }

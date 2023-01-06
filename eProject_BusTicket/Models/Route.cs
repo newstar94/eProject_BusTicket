@@ -16,6 +16,7 @@ namespace eProject_BusTicket.Models
         public float Distance { get; set; }
         [DisplayFormat(DataFormatString = "{0:N0}")]
         public decimal Price { get; set; }
+        [Display(Name = "Avaiable Seats")]
         public int AvaiableSeats { get; set; }
         public int Duration { get; set; }
         public int TripID { get; set; }

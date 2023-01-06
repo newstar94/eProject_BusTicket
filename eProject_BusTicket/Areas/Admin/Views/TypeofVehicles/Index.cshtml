@@ -1,28 +1,65 @@
 ﻿@model IEnumerable<eProject_BusTicket.Models.TypeofVehicle>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Type of Vehicle";
 }
 
-<h2>Index</h2>
+<h2>Type of Vehicle</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create","",new{@class="btn btn-success"})
 </p>
 <table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
-        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </th>
     </tr>
 
-    @foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
+            <td>
+                <button class="status" data-id=@item.TypeID>@(item.IsActive ? "Active" : "Disable")</button>
+            </td>
         </tr>
     }
-
 </table>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    const statuslist = document.getElementsByClassName('status');
+    for (const status of statuslist) {
+        if (status.textContent == 'Active') {
+            status.classList.add('btn', 'btn-success');
+        } else if (status.textContent == 'Disable') {
+            status.classList.add('btn', 'btn-danger');
+        }
+    }
+
+    $('.status').on('click',
+        function () {
+            var btn = $(this)
+            var id = $(this).data('id');
+            $.ajax({
+                url: "/TypeofVehicles/ChangeStatus",
+                data: { id: id },
+                dataType: "json",
+                type: "Post",
+                success: function (response) {
+                    if (response == true) {
+                        btn.text('Active');
+                        btn.removeClass("btn-danger").addClass("btn-success");
+                    } else {
+                        btn.text('Disable');
+                        btn.removeClass("btn-success").addClass("btn-danger");
+                    }
+                }
+            });
+        });
+</script>
