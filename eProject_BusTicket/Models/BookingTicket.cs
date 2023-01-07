@@ -10,6 +10,7 @@ namespace eProject_BusTicket.Models
     public class BookingTicket
     {
         public int BookingTicketID { get; set; }
+        public string TicketCode { get; set; }
         public int RouteScheduleID { get; set; }
         public virtual RouteSchedule RouteSchedule { get; set; }
         public int BookingID { get; set; }

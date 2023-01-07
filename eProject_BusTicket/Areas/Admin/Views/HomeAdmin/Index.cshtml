@@ -1,4 +1,115 @@
-﻿
+﻿@model PagedList.IPagedList<eProject_BusTicket.Models.Booking>
+@using PagedList.Mvc
 @{
     ViewBag.Title = "Dashboard";
 }
+<style type="text/css">
+    .pagination li a{
+        position: relative;
+        float: left;
+        padding: 6px 12px;
+        margin-left: -1px;
+        line-height: 1.42857143;
+        color: #337ab7;
+        text-decoration: none;
+        background-color: #fff;
+        border: 1px solid #ddd;       
+    }
+    .pagination li a:hover {
+        z-index: 2;
+        color: #23527c;
+        background-color: #eeeeee;
+        border-color: #ddd;
+    }
+    .pagination .active a {
+        z-index: 3;
+        color: #fff;
+        cursor: default;
+        background-color: #337ab7;
+        border-color: #337ab7;
+    }
+</style>
+<div class="row">
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Earnings (This Month)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.Month.ToString("N0") VND</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Earnings (Annual)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.Earning.ToString("N0") VND</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">List Booking</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive" style="overflow-x: hidden;">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div id="dataTable_filter" class="dataTables_filter">
+                            
+                                @using (Ajax.BeginForm("Index", "HomeAdmin", new AjaxOptions()
+                                {
+                                    HttpMethod = "Post",
+                                    UpdateTargetId = "partialView"
+                                }))
+                                {
+                                    <label>
+                                        <input type="search" name="search" class="form-control form-control-sm" placeholder="Search..." aria-controls="dataTable" onkeyup="Search()">
+                                    </label>
+                                    <div class="form-group" style="display: none">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <button id="submit" type="submit" value="Search" class="btn btn-primary">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12" id="partialView">
+                        @Html.Partial("_Booking")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function Search() {
+        document.getElementById('submit').click();
+    }
+</script>

@@ -1,0 +1,74 @@
+﻿@model PagedList.IPagedList<eProject_BusTicket.Models.Booking>
+@using PagedList.Mvc
+@{
+    Layout = null;
+}
+<table class="table table-bordered dataTable">
+    <tr>
+        <th>
+            Buyer Name
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().PhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().TotalPayment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().BookingCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().DateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().TranId)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalPayment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookingCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TranId)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Index", "BookingTickets", new { id = item.BookingID }, "")
+            </td>
+        </tr>
+    }
+</table>
+@Html.PagedListPager(Model, page => Url.Action("Index", "HomeAdmin", new
+{
+    page,
+    search=ViewBag.Search
+}),
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions()
+    { HttpMethod = "Post", UpdateTargetId = "partialView" }))

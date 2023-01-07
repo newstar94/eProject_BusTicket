@@ -24,7 +24,7 @@ namespace eProject_BusTicket.Models
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
             const string name = "admin@example.com";
-            const string password = "Admin@112023";
+            const string password = "111111";
             const string roleName = "Admin";
 
             //Create Role Admin if it does not exist

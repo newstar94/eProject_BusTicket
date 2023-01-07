@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using eProject_BusTicket.Areas.Admin.Enum;
+using eProject_BusTicket.Areas.Admin.ViewModels;
 using eProject_BusTicket.Models;
 using eProject_BusTicket.ViewModels;
 using log4net;
@@ -242,29 +243,32 @@ namespace eProject_BusTicket.Controllers
                             bookingTicket.Status = TicketStatus.NotUsedYet;
                             db.BookingsTickets.Add(bookingTicket);
                             db.SaveChanges();
+                            bookingTicket.TicketCode= bookingTicket.RouteSchedule.Route.Trip.CodeName + bookingTicket.RouteSchedule.DepartureTime.ToString("dMyy") + bookingTicket.BookingTicketID.ToString();
+                            db.Entry(bookingTicket).State = EntityState.Modified;
+                            db.SaveChanges();
                         }
-                        ViewBag.Result = "Complete! Thank you for choosing us!";
+                        TempData["Result"] = "Complete! Thank you for choosing us!";
 
                         tickets = db.BookingsTickets.Where(t => t.BookingID == booking.BookingID).ToList();
-
+                        TempData["tickets"] = tickets;
                         log.InfoFormat("Thanh toan thanh cong, OrderId={0}, VNPAY TranId={1}", BookingCode, TranId);
                     }
                     else
                     {
                         //Thanh toan khong thanh cong. Ma loi: vnp_ResponseCode
-                        ViewBag.Result = "Have an error! Please try again!";
+                        TempData["Result"] = "Have an error! Please try again!";
                         log.InfoFormat("Thanh toan loi, OrderId={0}, VNPAY TranId={1},ResponseCode={2}", BookingCode, TranId, vnp_ResponseCode);
                     }
 
                 }
                 else
                 {
-                    ViewBag.Result = "Have an error! Please try again!";
+                    TempData["Result"] = "Have an error! Please try again!";
                     log.InfoFormat("Invalid signature, InputData={0}", Request.RawUrl);
 
                 }
             }
-            return View(tickets);
+            return RedirectToAction("Index","BookingTickets");
         }
     }
 }

@@ -48,7 +48,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
             TripVM tripvm = new TripVM();
             tripvm.Trip = trip;
             var stations = db.Stations.Where(st => st.TripID == trip.TripID).ToList();
-            tripvm.Routes=db.Routes.Where(r => r.TripID==trip.TripID).ToList();
+            tripvm.Routes = db.Routes.Where(r => r.TripID == trip.TripID).ToList();
             tripvm.Stations = stations;
             return View(tripvm);
         }
@@ -64,7 +64,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         public ActionResult Create()
         {
             ViewBag.VehicleID = new SelectList(db.Vehicles.Where(v => v.IsActive == true), "VehicleID", "Code");
-            ViewBag.Location = new SelectList(db.Locations.Where(l=>l.IsActive==true), "LocationID", "LocationName");
+            ViewBag.Location = new SelectList(db.Locations.Where(l => l.IsActive == true), "LocationID", "LocationName");
             return View();
         }
 
@@ -74,7 +74,19 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult Create(TripVM tripvm)
         {
-            if (ModelState.IsValid)
+            var listtrip = db.Trips.ToList();
+            var count = 0;
+            foreach (var trip in listtrip)
+            {
+                if (trip.CodeName == tripvm.Trip.CodeName)
+                {
+                    ViewBag.Error = "Trip code has exist!";
+                    count = 1;
+                    break;
+                }
+            }
+
+            if (ModelState.IsValid && count == 0)
             {
                 Trip trip = new Trip();
                 trip.VehicleID = tripvm.Trip.VehicleID;
@@ -120,6 +132,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
 
                 return Json(Url.Action("Index"));
             }
+
             ViewBag.VehicleID = new SelectList(db.Vehicles.Where(v => v.IsActive == true), "VehicleID", "Code", tripvm.Trip.VehicleID);
             return View(tripvm);
         }

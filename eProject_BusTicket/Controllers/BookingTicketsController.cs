@@ -9,6 +9,9 @@ using System.Web;
 using System.Web.Mvc;
 using eProject_BusTicket.Areas.Admin.Enum;
 using eProject_BusTicket.Models;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 
 namespace eProject_BusTicket.Controllers
@@ -21,39 +24,43 @@ namespace eProject_BusTicket.Controllers
         // GET: BookingTickets
         public ActionResult Index(int? id)
         {
-            if (TempData["Cancel"] != null)
-            {
-                ViewBag.Cancel = TempData["Cancel"];
-            }
-
             List<BookingTicket> tickets = new List<BookingTicket>();
-            if (id==null)
+
+            if (TempData["tickets"] == null)
             {
-                var userId= User.Identity.GetUserId();
-                var bookings = db.Bookings.Where(b => b.UserID == userId).ToList();
-                var ticketlist = db.BookingsTickets.ToList();
-                foreach (var booking in bookings)
+                if (id == null)
                 {
-                    tickets.AddRange(ticketlist.Where(t => t.BookingID == booking.BookingID).ToList());
+                    var userId = User.Identity.GetUserId();
+                    var bookings = db.Bookings.Where(b => b.UserID == userId).ToList();
+                    var ticketlist = db.BookingsTickets.ToList();
+                    foreach (var booking in bookings)
+                    {
+                        tickets.AddRange(ticketlist.Where(t => t.BookingID == booking.BookingID).ToList());
+                    }
+                }
+                else
+                {
+                    tickets = db.BookingsTickets.Where(t => t.BookingID == id)
+                        .Include(b => b.Booking).Include(b => b.RouteSchedule).ToList();
+                }
+
+                foreach (var ticket in tickets)
+                {
+                    if (ticket.DepartureTime < DateTime.Now && ticket.Status == TicketStatus.NotUsedYet)
+                    {
+                        ticket.Status = TicketStatus.Used;
+                        db.Entry(ticket).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
                 }
             }
             else
             {
-                tickets = db.BookingsTickets.Where(t => t.BookingID == id)
-                    .Include(b => b.Booking).Include(b => b.RouteSchedule).ToList();
-            }
-            
-            foreach (var ticket in tickets)
-            {
-                if (ticket.DepartureTime < DateTime.Now && ticket.Status == TicketStatus.NotUsedYet)
-                {
-                    ticket.Status = TicketStatus.Used;
-                    db.Entry(ticket).State = EntityState.Modified;
-                    db.SaveChanges();
-                }
+                tickets = (List<BookingTicket>)TempData["tickets"];
             }
             return View(tickets);
         }
+
 
         public ActionResult Cancel(int? id)
         {
@@ -65,8 +72,6 @@ namespace eProject_BusTicket.Controllers
 
             var ticket = db.BookingsTickets.Find(id);
             var booking = db.Bookings.Find(ticket.BookingID);
-
-
             try
             {
                 var amountrf = 0;
@@ -151,6 +156,122 @@ namespace eProject_BusTicket.Controllers
 
             return RedirectToAction("Index", new { id = booking.BookingID });
         }
+
+
+        public ActionResult Print(int? id)
+        {
+
+            var ticket = db.BookingsTickets.Find(id);
+            var start = ticket.RouteSchedule.Route.Start;
+            var end = ticket.RouteSchedule.Route.End;
+            var name = ticket.PassengerName;
+            var age = ticket.PassengerAge;
+            var code = ticket.TicketCode;
+            var departuretime = ticket.DepartureTime.ToString("HH:mm dd/MM/yyyy");
+
+
+            Document pdfDoc = new Document(new Rectangle(796, 324),50,10,90,10);
+            PdfWriter pdfWriter = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+            pdfDoc.Open();
+            BaseFont baseFont = BaseFont.CreateFont("c:/windows/fonts/arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            Font font = new Font(baseFont,14,Font.NORMAL,BaseColor.BLACK);
+
+
+
+            //set background
+            Image image = Image.GetInstance(Server.MapPath("~/Images/Ticket.png"));
+            image.Alignment = Image.UNDERLYING;
+            image.SetAbsolutePosition(0, 0);
+            pdfDoc.Add(image);
+
+            Paragraph paragraph = new Paragraph("Ticket code:" + code, FontFactory.GetFont("Arial", 14, Font.BOLD, BaseColor.BLACK));
+            paragraph.Alignment = Element.ALIGN_RIGHT;
+            pdfDoc.Add(paragraph);
+
+            //set ticket
+            PdfPTable table = new PdfPTable(7);
+            table.WidthPercentage = 100;
+            table.HorizontalAlignment = 0;
+            table.SpacingBefore = 10f;
+            table.SpacingAfter = 10f;
+            
+            PdfPCell cell = new PdfPCell();
+            paragraph = new Paragraph("Start:",FontFactory.GetFont("Arial",14,Font.BOLD,BaseColor.BLACK));
+            cell.AddElement(paragraph);
+            cell.Border = 0;
+            table.AddCell(cell);
+            cell = new PdfPCell();
+            paragraph = new Paragraph(start, font);
+            cell.Colspan = 6;
+            cell.Border = 0;
+            cell.AddElement(paragraph);
+            table.AddCell(cell);
+
+
+            cell = new PdfPCell();
+            paragraph = new Paragraph("End:", FontFactory.GetFont("Arial", 14, Font.BOLD, BaseColor.BLACK));
+            cell.AddElement(paragraph);
+            cell.Border = 0;
+            table.AddCell(cell);
+            cell = new PdfPCell();
+            paragraph = new Paragraph(end, font);
+            cell.Colspan = 6;
+            cell.Border = 0;
+            cell.AddElement(paragraph);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            paragraph = new Paragraph("Time:", FontFactory.GetFont("Arial", 14, Font.BOLD, BaseColor.BLACK));
+            cell.AddElement(paragraph);
+            cell.Border = 0;
+            table.AddCell(cell);
+            cell = new PdfPCell();
+            paragraph = new Paragraph(departuretime, font);
+            cell.Colspan = 6;
+            cell.Border = 0;
+            cell.AddElement(paragraph);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            paragraph = new Paragraph("Name:", FontFactory.GetFont("Arial", 14, Font.BOLD, BaseColor.BLACK));
+            cell.AddElement(paragraph);
+            cell.Border = 0;
+            table.AddCell(cell);
+            cell = new PdfPCell();
+            paragraph = new Paragraph(name, font);
+            cell.Colspan = 6;
+            cell.Border = 0;
+            cell.AddElement(paragraph);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            paragraph = new Paragraph("Age:", FontFactory.GetFont("Arial", 14, Font.BOLD, BaseColor.BLACK));
+            cell.AddElement(paragraph);
+            cell.Border = 0;
+            table.AddCell(cell);
+            cell = new PdfPCell();
+            paragraph = new Paragraph(age.ToString(), font);
+            cell.Colspan = 6;
+            cell.Border = 0;
+            cell.AddElement(paragraph);
+            table.AddCell(cell);
+
+            pdfDoc.Add(table);
+
+            pdfWriter.CloseStream = false;
+            pdfDoc.Close();
+            Response.Buffer = true;
+            Response.ContentType = "application/pdf";
+            string filename = "Ticket " + code + ".pdf";
+            Response.AddHeader("content-disposition", "attachment;filename=" + filename);
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Write(pdfDoc);
+            Response.End();
+
+            return null;
+        }
+
+
 
         protected override void Dispose(bool disposing)
         {

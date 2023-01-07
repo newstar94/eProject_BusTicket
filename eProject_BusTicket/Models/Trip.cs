@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -8,10 +9,12 @@ namespace eProject_BusTicket.Models
 {
     public class Trip
     {
+        [Key]
         public int TripID { get; set; }
         [Required]
         [Display(Name = "Trip Code")]
         public string CodeName { get; set; }
+        [Required]
         public int VehicleID { get; set; }
         public virtual Vehicle Vehicle { get; set; }
         [Required]

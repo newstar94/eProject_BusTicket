@@ -76,7 +76,7 @@ namespace eProject_BusTicket.Controllers
                 case SignInStatus.Success:
                     if (await UserManager.IsInRoleAsync(user.Id, "Admin"))
                     {
-                        return RedirectToAction("Index","Locations",new { area = "Admin" });
+                        return RedirectToAction("Index","HomeAdmin",new { area = "Admin" });
                     }
                     return RedirectToLocal(returnUrl);
                     

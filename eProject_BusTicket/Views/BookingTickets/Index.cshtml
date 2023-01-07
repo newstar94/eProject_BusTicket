@@ -4,12 +4,19 @@
 @{
     ViewBag.Title = "Tickets";
 }
-
+<link href="~/Areas/Admin/Assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
 <h2 style="text-align: center">Tickets</h2>
-@if (@ViewBag.Cancel != null)
+@if (@TempData["Cancel"] != null)
 {
     <div class="alert alert-success" role="alert">
-        <b>  @ViewBag.Cancel</b>
+        <b>  @TempData["Cancel"]</b>
+    </div>
+}
+
+@if (@TempData["Result"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        <b>@TempData["Result"]</b>
     </div>
 }
 
@@ -17,6 +24,9 @@
     <tr>
         <th>
             Buyer Name
+        </th>
+        <th>
+            Phone Number
         </th>
         <th>
             @Html.DisplayNameFor(model => model.RouteSchedule.Route.Start)
@@ -51,6 +61,9 @@
                 @Html.DisplayFor(modelItem => item.Booking.Name)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Booking.PhoneNumber)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.RouteSchedule.Route.Start)
             </td>
             <td>
@@ -71,15 +84,21 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
-            @if (item.DepartureTime > DateTime.Now.AddHours(1) && item.Status == TicketStatus.NotUsedYet)
-            {
-                <td>
-                    @Html.ActionLink("Cancel", "Cancel", new { id = @item.BookingTicketID }, new { onclick = "return confirm('Are sure wants to Cancel?');" })
-                </td>
-            }
+            <td>
+                @if (item.DepartureTime > DateTime.Now.AddHours(1) && item.Status == TicketStatus.NotUsedYet)
+                {
+                    @Html.ActionLink("Cancel", "Cancel", new { id = @item.BookingTicketID }, new { onclick = "return confirm('Are sure wants to Cancel?');", @class="btn btn-danger" })
+                }
+                @if (item.Status == TicketStatus.NotUsedYet)
+                {
+                    <button class="btn btn-primary" style="margin-top: 7px"><i class="far fa-file-pdf"> @Html.ActionLink("Print", "Print", new { id = @item.BookingTicketID }) </i></button>
+                }
+            </td>
+            
         </tr>
     }
 </table>
+
 <script type="text/javascript">
     window.setTimeout(function () {
         $(".alert").fadeTo(500, 0).slideUp(500, function () {

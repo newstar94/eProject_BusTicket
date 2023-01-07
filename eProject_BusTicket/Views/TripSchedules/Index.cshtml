@@ -23,9 +23,8 @@
     </button>
 </form>
 
-@if (Model.Count() > 0)
-{
-    <table class="table">
+
+    <table id="triptable" class="table">
         <tr>
             <th>
                 Trip Code
@@ -56,65 +55,66 @@
             </th>
             <th></th>
         </tr>
-
-        @foreach (var item in Model)
+    @if (Model.Count() > 0)
+    {
+        foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TripSchedule.Trip.CodeName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TripSchedule.DepartureTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Origin)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Destination)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Vehicle.Code)
-                </td>
-                <td>
-                    @item.TripSchedule.Trip.Routes.Max(r => r.Distance) km
-                </td>
-                <td>
-                    @if (item.Stations.Count > 2)
-                    {
-                        <span>
-                            @(item.TripSchedule.Trip.Routes.Max(r => r.Duration) + (item.Stations.Count - 2) * 7) mins
-                        </span>
-                    }
-                    else
-                    {
-                        <span>
-                            @(@item.TripSchedule.Trip.Routes.Max(r => r.Duration)) mins
-                        </span>
-                    }
-                </td>
-                <td>
-                    @item.Stations.Count()
-                </td>
-                <td>
-                    <button class="btn btn-success">@Html.ActionLink("Select", "Details", new { id = item.TripSchedule.TripScheduleID })</button>
-                </td>
-            </tr>
+            if (item.TripSchedule.DepartureTime > DateTime.Now)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TripSchedule.Trip.CodeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TripSchedule.DepartureTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Origin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Destination)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Vehicle.TypeofVehicle.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TripSchedule.Trip.Vehicle.Code)
+                    </td>
+                    <td>
+                        @item.TripSchedule.Trip.Routes.Max(r => r.Distance) km
+                    </td>
+                    <td>
+                        @if (item.Stations.Count > 2)
+                        {
+                            <span>
+                                @(item.TripSchedule.Trip.Routes.Max(r => r.Duration) + (item.Stations.Count - 2) * 7) mins
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                @(@item.TripSchedule.Trip.Routes.Max(r => r.Duration)) mins
+                            </span>
+                        }
+                    </td>
+                    <td>
+                        @item.Stations.Count()
+                    </td>
+                    <td>
+                        <button class="btn btn-success">@Html.ActionLink("Select", "Details", new { id = item.TripSchedule.TripScheduleID })</button>
+                    </td>
+                </tr>
+            }
+
         }
+    }
     </table>
-}
-else
-{
-    <div class="not_found"> NOT FOUND </div>
-}
 
+<div id="not_found" class="not_found" style="display: none"> NOT FOUND </div>
 
-
-
-<script src="~/Scripts/jquery-3.4.1.min.js"></script>
-<script type="text/javascript">$("#Origin").on('change', function () {
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $("#Origin").on('change', function () {
         $('#Destination').children().remove().end();
         jQuery("#Origin option").each(function () {
             if (jQuery(this).val() != $('#Origin').val()) {
@@ -123,4 +123,12 @@ else
                 }
             }
         });
-    });</script>
+    });
+    var table = document.getElementById("triptable");
+    var rowCount = table.rows.length;
+    var not_found = document.getElementById("not_found");
+    if (rowCount<2) {
+        table.style.display = "none";
+        not_found.style.display = "block";
+    }
+</script>

@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using eProject_BusTicket.Models;
 using eProject_BusTicket.ViewModels;
+using PagedList;
 
 namespace eProject_BusTicket.Areas.Admin.Controllers
 {
@@ -14,9 +15,32 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
     public class TripSchedulesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+        private int pageSize = 5;
         /// GET: TripSchedules
-        public ActionResult Index(int? Origin, int? Destination, DateTime? dateTime)
+        public ActionResult Index( int? page)
+        {
+            int pageNumber = (page ?? 1);
+            ViewBag.Location = new SelectList(db.Locations, "LocationID", "LocationName");
+            List<TripSVM> tripSVMs = new List<TripSVM>();
+            var tripSchedules = db.TripSchedules
+                .Include(t => t.Trip).ToList();
+            var routeSchedules = db.RouteSchedules.ToList();
+            var stations = db.Stations.ToList();
+
+            foreach (var tripSchedule in tripSchedules)
+            {
+                TripSVM tripSVM = new TripSVM();
+                tripSVM.TripSchedule = tripSchedule;
+                tripSVM.RouteSchedules = routeSchedules.Where(rs => rs.TripScheduleID == tripSchedule.TripScheduleID).ToList();
+                tripSVM.Stations = stations.Where(st => st.TripID == tripSchedule.TripID).ToList();
+                tripSVMs.Add(tripSVM);
+            }
+            
+            return View(tripSVMs.ToPagedList(pageNumber, pageSize));
+        }
+
+        [HttpPost]
+        public ActionResult Index(int? Origin, int? Destination, DateTime? dateTime, int? page)
         {
             var origin = "";
             var destination = "";
@@ -30,6 +54,10 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
                 destination = db.Locations.Find(Destination).LocationName;
             }
 
+            ViewBag.Origin = Origin;
+            ViewBag.Destination = Destination;
+            ViewBag.DateTime= dateTime;
+            int pageNumber = (page ?? 1);
             ViewBag.Location = new SelectList(db.Locations, "LocationID", "LocationName");
             List<TripSVM> tripSVMs = new List<TripSVM>();
             var tripSchedules = db.TripSchedules
@@ -49,8 +77,9 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
                 tripSVMs.Add(tripSVM);
             }
 
-            return View(tripSVMs.ToList());
+            return View("_Trips",tripSVMs.ToPagedList(pageNumber, pageSize));
         }
+
 
         // GET: TripSchedules/Details/5
         public ActionResult Details(int? id)

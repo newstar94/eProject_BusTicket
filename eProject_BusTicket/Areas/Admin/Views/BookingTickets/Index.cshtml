@@ -1,0 +1,72 @@
+﻿@using eProject_BusTicket.Areas.Admin.Enum
+@model IEnumerable<eProject_BusTicket.Models.BookingTicket>
+
+@{
+    ViewBag.Title = "Tickets";
+}
+<h2 style="text-align: center">Tickets</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Buyer Name
+        </th>
+        <th>
+            Phone Number
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RouteSchedule.Route.Start)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RouteSchedule.Route.End)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DepartureTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PassengerName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PassengerAge)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Booking.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Booking.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RouteSchedule.Route.Start)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RouteSchedule.Route.End)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartureTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerAge)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+        </tr>
+    }
+</table>

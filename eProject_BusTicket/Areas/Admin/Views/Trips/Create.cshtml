@@ -12,7 +12,7 @@
             <div class="form-horizontal">
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+            <span class="text-danger">@ViewBag.Error</span>
                 @*Chọn xe*@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Trip.VehicleID, "VehicleID", htmlAttributes: new { @class = "control-label col-md-2" })
