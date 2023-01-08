@@ -31,9 +31,20 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "LocationID,LocationName")] Location location)
         {
-            if (ModelState.IsValid)
+            var check = true;
+            var locations = db.Locations.ToList();
+            foreach (var lo in locations)
             {
-                location.IsActive=true;
+                if (location.LocationName.ToLower() == lo.LocationName.ToLower())
+                {
+                    ModelState.AddModelError("", "Location has exist!");
+                    check = false;
+                    break;
+                }
+            }
+            if (ModelState.IsValid && check == true)
+            {
+                location.IsActive = true;
                 db.Locations.Add(location);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -46,7 +57,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         public JsonResult ChangeStatus(int id)
         {
             var location = db.Locations.Find(id);
-            location.IsActive=!location.IsActive;
+            location.IsActive = !location.IsActive;
             db.Entry(location).State = EntityState.Modified;
             db.SaveChanges();
 

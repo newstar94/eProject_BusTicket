@@ -32,7 +32,18 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "TypeID,Name")] TypeofVehicle typeofVehicle)
         {
-            if (ModelState.IsValid)
+            var check = true;
+            var types = db.TypeofVehicles.ToList();
+            foreach (var type in types)
+            {
+                if (type.Name.ToLower() == type.Name.ToLower())
+                {
+                    ModelState.AddModelError("", "Location has exist!");
+                    check = false;
+                    break;
+                }
+            }
+            if (ModelState.IsValid && check == true)
             {
                 typeofVehicle.IsActive = true;
                 db.TypeofVehicles.Add(typeofVehicle);

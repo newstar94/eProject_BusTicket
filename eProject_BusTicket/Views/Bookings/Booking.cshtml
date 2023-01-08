@@ -114,11 +114,13 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Email: </label>
-                        <input name="Email" value="@ViewBag.Email" required />
+                        <input id="Email" name="Email" value="@ViewBag.Email" required onchange="check()" />
+                        <span class="text-danger" id="email_error"></span>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Phone: </label>
-                        <input name="PhoneNumber" value="@ViewBag.PhoneNumber" required />
+                        <input id="PhoneNumber" name="PhoneNumber" value="@ViewBag.PhoneNumber" onchange="check()" required />
+                        <span class="text-danger" id="phone_error"></span>
                     </div>
                 </form>
 
@@ -127,7 +129,9 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input id="create" type="submit" value="Check Out" class="btn btn-danger" />
+                <button id="Check_Out" type="submit" class="btn btn-danger">
+                    Check Out
+                </button>
             </div>
         </div>
     </div>
@@ -153,7 +157,7 @@
             var ageCell = row.insertCell(1);
             var priceCell = row.insertCell(2);
             nameCell.innerHTML = '<input type="text" name="PassengerName" placeholder="Passenger Name" required>';
-            ageCell.innerHTML = '<input type="number" name="PassengerAge" placeholder="Age" class="PassengerAge" onchange="caculateprice(this)" required>';
+            ageCell.innerHTML = '<input type="number" name="PassengerAge" placeholder="Age" class="PassengerAge" onchange="caculateprice(this)" required min="0">';
             priceCell.innerHTML = '<div class="price"></div>';
         }
     }
@@ -163,7 +167,6 @@
         var ageCell = row.querySelector(".PassengerAge");
         var age = ageCell.value;
         var tempprice = document.getElementById("tempprice").innerText.replaceAll(".", "");
-        console.log(tempprice);
         if (age < 6) {
             var price = tempprice * 0;
         } else if (age < 12) {
@@ -188,6 +191,8 @@
     }
 
     function check() {
+        var btn = document.getElementById("Check_Out");
+        //check amount
         var amount = document.getElementById("seats");
         var avaiable = document.getElementById("aviableseats");
         var val = parseInt(amount.value);
@@ -196,6 +201,28 @@
             alert("Max amount: " + seat);
             amount.value = "";
         }
+        //check email
+        var email = document.getElementById("Email").value;
+        var regexEmail = /^[\w-\.]+@@([\w-]+\.)+[\w-]{2,4}$/g;
+        if (!email.match(regexEmail)) {
+            document.getElementById("email_error").innerHTML = "Email incorect!";
+        } else {
+            document.getElementById("email_error").innerHTML = "";
+        }
+        //check phone number
+        var phone = document.getElementById("PhoneNumber").value;
+        var regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+        if (!phone.match(regexPhoneNumber)) {
+            document.getElementById("phone_error").innerHTML = "Phone incorect!";
+        } else {
+            document.getElementById("phone_error").innerHTML = "";
+        }
+        if (phone.match(regexPhoneNumber) && email.match(regexEmail)) {
+            btn.disabled = false;
+        } else {
+            btn.disabled = true;
+        }
+
     }
 
 </script>

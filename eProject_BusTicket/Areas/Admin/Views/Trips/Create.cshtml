@@ -11,6 +11,7 @@
         {
             <div class="form-horizontal">
                 <hr />
+                <span id="error" class="text-danger"></span>
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <span class="text-danger">@ViewBag.Error</span>
                 @*Chọn xe*@
@@ -265,8 +266,16 @@
                 data: JSON.stringify(tripvm),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (r) {
+                success: function () {
                     window.location.href = '@Url.Action("Index")';
+                },
+                fail: function(){
+                    window.location.href = '@Url.Action("Create")';
+                },
+                statusCode: {
+                    500: function() {
+                        document.getElementById("error").innerHTML = "Trip code has exist!";
+                    }
                 }
             });
         }, 1200);  // the function will be executed after 1000 milliseconds (1 second)

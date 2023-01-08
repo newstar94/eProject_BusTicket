@@ -8,6 +8,7 @@ namespace eProject_BusTicket.ViewModels
         [Required]
         [Display(Name = "Email")]
         [EmailAddress]
+        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Email incorrect!")]
         public string Email { get; set; }
 
         [Required]
@@ -24,10 +25,12 @@ namespace eProject_BusTicket.ViewModels
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Email incorrect!")]
         public string Email { get; set; }
         [Required]
         public string FullName { get; set; }
         [Required]
+        [RegularExpression(@"0([35879][0-9]{8})$", ErrorMessage = "Phone number incorrect!")]
         public string PhoneNumber { get; set; }
 
         [Required]
@@ -47,6 +50,7 @@ namespace eProject_BusTicket.ViewModels
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Email incorrect!")]
         public string Email { get; set; }
 
         [Required]
@@ -59,7 +63,6 @@ namespace eProject_BusTicket.ViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-
         public string Code { get; set; }
     }
 
@@ -68,6 +71,7 @@ namespace eProject_BusTicket.ViewModels
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Email incorrect!")]
         public string Email { get; set; }
     }
 }

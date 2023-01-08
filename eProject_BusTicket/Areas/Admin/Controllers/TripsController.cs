@@ -85,7 +85,6 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
                     break;
                 }
             }
-
             if (ModelState.IsValid && count == 0)
             {
                 Trip trip = new Trip();
@@ -129,10 +128,8 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
                         db.SaveChanges();
                     }
                 }
-
                 return Json(Url.Action("Index"));
             }
-
             ViewBag.VehicleID = new SelectList(db.Vehicles.Where(v => v.IsActive == true), "VehicleID", "Code", tripvm.Trip.VehicleID);
             return View(tripvm);
         }
