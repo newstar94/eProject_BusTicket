@@ -1,0 +1,91 @@
+﻿@model PagedList.IPagedList<eProject_BusTicket.Models.BookingTicket>
+@using eProject_BusTicket.Areas.Admin.Enum
+@using PagedList.Mvc
+@{
+    Layout = null;
+}
+<table class="table">
+    <tr>
+        <th>
+            Buyer Name
+        </th>
+        <th>
+            Phone Number
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().RouteSchedule.Route.Start)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().RouteSchedule.Route.End)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().DepartureTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().PassengerName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().PassengerAge)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Status)
+        </th>
+        <th>
+            Action
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Booking.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Booking.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RouteSchedule.Route.Start)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RouteSchedule.Route.End)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartureTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerAge)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @if (item.DepartureTime > DateTime.Now.AddHours(1) && item.Status == TicketStatus.NotUsedYet)
+                {
+                    @Html.ActionLink("Cancel", "Cancel", "BookingTickets", new { id = @item.BookingTicketID }, new { onclick = "return confirm('Are sure wants to Cancel?');", @class = "btn btn-danger" })
+                }
+                @if (item.Status == TicketStatus.NotUsedYet)
+                {
+                    <button class="btn btn-primary" style="margin-top: 7px"><i class="far fa-file-pdf"> @Html.ActionLink("Print", "Print", "BookingTickets", new { id = @item.BookingTicketID }, "") </i></button>
+                }
+            </td>
+
+        </tr>
+    }
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("Page", "BookingTickets", new
+{
+    page
+}),
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions()
+    { HttpMethod = "get", UpdateTargetId = "partialView" }))

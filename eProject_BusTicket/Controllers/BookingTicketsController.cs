@@ -13,6 +13,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
+using PagedList;
 
 namespace eProject_BusTicket.Controllers
 {
@@ -20,9 +21,9 @@ namespace eProject_BusTicket.Controllers
     public class BookingTicketsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private int pageSize = 5;
 
-        // GET: BookingTickets
-        public ActionResult Index(int? id)
+        public List<BookingTicket> GetTicket(int? id, string userId)
         {
             List<BookingTicket> tickets = new List<BookingTicket>();
 
@@ -30,7 +31,6 @@ namespace eProject_BusTicket.Controllers
             {
                 if (id == null)
                 {
-                    var userId = User.Identity.GetUserId();
                     var bookings = db.Bookings.Where(b => b.UserID == userId).ToList();
                     var ticketlist = db.BookingsTickets.ToList();
                     foreach (var booking in bookings)
@@ -58,9 +58,22 @@ namespace eProject_BusTicket.Controllers
             {
                 tickets = (List<BookingTicket>)TempData["tickets"];
             }
-            return View(tickets);
-        }
 
+            return tickets;
+        }
+        // GET: BookingTickets
+        public ActionResult Index()
+        {
+            return View();
+        }
+        [HttpGet]
+        public ActionResult Page(int? id, int? page)
+        {
+            var userId = User.Identity.GetUserId();
+            int pageNumber = (page ?? 1);
+            var tickets = new BookingTicketsController().GetTicket(id, userId);
+            return View("_Ticket", tickets.ToPagedList(pageNumber, pageSize));
+        }
 
         public ActionResult Cancel(int? id)
         {

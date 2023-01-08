@@ -70,15 +70,11 @@
                 <td id="tempprice">
                     @Html.DisplayFor(model => model.RouteDetails.Route.Price)
                 </td>
-                <td>
-                    @Html.DisplayFor(model => model.RouteDetails.AvaiableSeat)
-                </td>
-
-                <td id="aviableseats" style="display: none">
+                <td id="aviableseats">
                     @Html.DisplayFor(model => model.RouteDetails.AvaiableSeat)
                 </td>
                 <td>
-                    <input type="number" id="seats" onchange="addinfor()" required />
+                    <input type="number" id="seats" onchange="addinfor()" onkeyup="check()" required min="1" />
                 </td>
             </tr>
         </table>
@@ -189,6 +185,17 @@
         }
         total = total.toLocaleString("vi-VN");
         document.getElementById("total").innerHTML = total;
+    }
+
+    function check() {
+        var amount = document.getElementById("seats");
+        var avaiable = document.getElementById("aviableseats");
+        var val = parseInt(amount.value);
+        var seat = parseInt(avaiable.innerHTML);
+        if (val > seat) {
+            alert("Max amount: " + seat);
+            amount.value = "";
+        }
     }
 
 </script>

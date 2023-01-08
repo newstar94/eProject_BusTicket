@@ -45,7 +45,7 @@ namespace eProject_BusTicket.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("_ChangePassword",model);
             }
             var userId = User.Identity.GetUserId();
             var result = await UserManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
@@ -56,7 +56,7 @@ namespace eProject_BusTicket.Controllers
                 return View("_ChangePassword");
             }
             AddErrors(result);
-            return View(model);
+            return View("_ChangePassword", model);
         }
         
         #region Helpers

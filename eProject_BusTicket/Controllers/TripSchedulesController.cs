@@ -45,8 +45,20 @@ namespace eProject_BusTicket.Controllers
                 TripSVM tripSVM = new TripSVM();
                 tripSVM.TripSchedule = tripSchedule;
                 tripSVM.RouteSchedules = routeSchedules.Where(rs => rs.TripScheduleID == tripSchedule.TripScheduleID).ToList();
-                tripSVM.Stations = stations.Where(st => st.TripID == tripSchedule.TripID).ToList();
-                tripSVMs.Add(tripSVM);
+                var check = false;
+                foreach (var route in tripSVM.RouteSchedules)
+                {
+                    if (route.AvaiableSeat>0)
+                    {
+                        check = true;
+                        break;
+                    }
+                }
+                if (check==true)
+                {
+                    tripSVM.Stations = stations.Where(st => st.TripID == tripSchedule.TripID).ToList();
+                    tripSVMs.Add(tripSVM);
+                }
             }
 
             return View(tripSVMs.ToList());

@@ -129,13 +129,11 @@ namespace eProject_BusTicket.Controllers
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
                     ViewBag.Link = callbackUrl;
                     ViewBag.Noti = "Please check your email and confirm your email address!";
-                    return View("_ConfirmEmail");
+                    return View("_Register");
                 }
-
                 AddErrors(result);
             }
-
-            return View(model);
+            return View("_Register", model);
         }
 
 
@@ -175,24 +173,25 @@ namespace eProject_BusTicket.Controllers
                 if (user == null )
                 {
                     ViewBag.Noti = "Account don't exist!";
-                    return View("_ConfirmPassword");
+                    return View("_ForgotPassword");
                 }
 
                 var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
                 ViewBag.Link = callbackUrl;
-                return View("_ConfirmPassword");
+                return View("_ForgotPassword");
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return View("_ForgotPassword", model);
         }
 
         [HttpGet]
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
+            TempData["Code"]=code;
             return code == null ? View("Error") : View();
         }
 
@@ -205,14 +204,15 @@ namespace eProject_BusTicket.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("_ResetPassword", model);
             }
             var user = await UserManager.FindByNameAsync(model.Email);
             if (user == null)
             {
-                ViewBag.Noti = "Account not exist!";
+                ModelState.AddModelError("", "Account not exist!");
                 return View("_ResetPassword");
             }
+            model.Code = TempData["Code"].ToString();
             var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
             if (result.Succeeded)
             {
@@ -220,7 +220,7 @@ namespace eProject_BusTicket.Controllers
                 return View("_ResetPassword");
             }
             AddErrors(result);
-            return View();
+            return View("_ResetPassword",model);
         }
 
 

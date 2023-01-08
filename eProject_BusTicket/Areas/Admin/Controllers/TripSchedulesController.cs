@@ -35,7 +35,6 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
                 tripSVM.Stations = stations.Where(st => st.TripID == tripSchedule.TripID).ToList();
                 tripSVMs.Add(tripSVM);
             }
-            
             return View(tripSVMs.ToPagedList(pageNumber, pageSize));
         }
 
@@ -163,7 +162,6 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
                             {
                                 var duration = routes.Where(r => r.StartID == stations[0].StationID)
                                     .Where(r => r.EndID == stations[j].StationID).ToList().FirstOrDefault().Duration;
-
                                 routeSchedule.DepartureTime = tripSchedule.DepartureTime.AddMinutes(duration + j * 7);
                             }
                         }

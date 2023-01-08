@@ -1,10 +1,38 @@
-﻿@using eProject_BusTicket.Areas.Admin.Enum
-@model IEnumerable<eProject_BusTicket.Models.BookingTicket>
-
+﻿@model PagedList.IPagedList<eProject_BusTicket.Models.BookingTicket>
+@using eProject_BusTicket.Areas.Admin.Enum
+@using PagedList.Mvc
 @{
     ViewBag.Title = "Tickets";
 }
 <link href="~/Areas/Admin/Assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
+<style type="text/css">
+    .pagination li a {
+        position: relative;
+        float: left;
+        padding: 6px 12px;
+        margin-left: -1px;
+        line-height: 1.42857143;
+        color: #337ab7;
+        text-decoration: none;
+        background-color: #fff;
+        border: 1px solid #ddd;
+    }
+
+    .pagination li a:hover {
+        z-index: 2;
+        color: #23527c;
+        background-color: #eeeeee;
+        border-color: #ddd;
+    }
+
+    .pagination .active a {
+        z-index: 3;
+        color: #fff;
+        cursor: default;
+        background-color: #337ab7;
+        border-color: #337ab7;
+    }
+</style>
 <h2 style="text-align: center">Tickets</h2>
 @if (@TempData["Cancel"] != null)
 {
@@ -20,85 +48,12 @@
     </div>
 }
 
-<table class="table">
-    <tr>
-        <th>
-            Buyer Name
-        </th>
-        <th>
-            Phone Number
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RouteSchedule.Route.Start)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RouteSchedule.Route.End)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DepartureTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PassengerName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PassengerAge)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Status)
-        </th>
-        <th>
-            Action
-        </th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Booking.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Booking.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RouteSchedule.Route.Start)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RouteSchedule.Route.End)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DepartureTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PassengerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PassengerAge)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @if (item.DepartureTime > DateTime.Now.AddHours(1) && item.Status == TicketStatus.NotUsedYet)
-                {
-                    @Html.ActionLink("Cancel", "Cancel", new { id = @item.BookingTicketID }, new { onclick = "return confirm('Are sure wants to Cancel?');", @class="btn btn-danger" })
-                }
-                @if (item.Status == TicketStatus.NotUsedYet)
-                {
-                    <button class="btn btn-primary" style="margin-top: 7px"><i class="far fa-file-pdf"> @Html.ActionLink("Print", "Print", new { id = @item.BookingTicketID }) </i></button>
-                }
-            </td>
-            
-        </tr>
+<div id="partialView">
+    @{
+        Html.RenderAction("Page", "BookingTickets", new { page = 1 });
     }
-</table>
-
+    @*@Html.Partial("_Ticket")*@
+</div>
 <script type="text/javascript">
     window.setTimeout(function () {
         $(".alert").fadeTo(500, 0).slideUp(500, function () {

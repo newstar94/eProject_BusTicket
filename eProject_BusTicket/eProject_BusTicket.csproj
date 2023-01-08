@@ -2225,15 +2225,15 @@
     <Content Include="Views\Bookings\Payment.cshtml" />
     <Content Include="Views\TripSchedules\Index.cshtml" />
     <Content Include="Views\TripSchedules\Details.cshtml" />
-    <Content Include="Views\Shared\_ConfirmPassword.cshtml" />
-    <Content Include="Views\Shared\_ConfirmEmail.cshtml" />
+    <Content Include="Views\Shared\_ForgotPassword.cshtml" />
+    <Content Include="Views\Shared\_Register.cshtml" />
     <Content Include="Views\Shared\_ResetPassword.cshtml" />
     <Content Include="Views\Shared\_ChangePassword.cshtml" />
+    <Content Include="Views\Shared\_Ticket.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Reports\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
