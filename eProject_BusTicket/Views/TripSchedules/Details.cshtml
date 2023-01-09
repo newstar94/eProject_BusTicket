@@ -102,32 +102,36 @@
 
     @foreach (var item in Model.RouteSchedules)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Route.Start)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Route.End)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Route.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AvaiableSeat)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DepartureTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Route.Distance) km
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Route.Duration) mins
-            </td>
-            <td>
-                <button class="btn btn-danger"> @Html.ActionLink("Booking", "Booking", "Bookings", new { id = item.RouteScheduleID }, "")</button>
-            </td>
-        </tr>
+        if (item.DepartureTime>DateTime.Now)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Route.Start)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Route.End)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Route.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AvaiableSeat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartureTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Route.Distance) km
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Route.Duration) mins
+                </td>
+                <td>
+                    <button class="btn btn-danger"> @Html.ActionLink("Booking", "Booking", "Bookings", new { id = item.RouteScheduleID }, "")</button>
+                </td>
+            </tr>
+        }
+        
     }
 
 </table>

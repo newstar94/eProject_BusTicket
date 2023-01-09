@@ -17,7 +17,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private int pageSize = 5;
         /// GET: TripSchedules
-        public ActionResult Index( int? page)
+        public ActionResult Index(int? page)
         {
             int pageNumber = (page ?? 1);
             ViewBag.Location = new SelectList(db.Locations, "LocationID", "LocationName");
@@ -55,7 +55,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
 
             ViewBag.Origin = Origin;
             ViewBag.Destination = Destination;
-            ViewBag.DateTime= dateTime;
+            ViewBag.DateTime = dateTime;
             int pageNumber = (page ?? 1);
             ViewBag.Location = new SelectList(db.Locations, "LocationID", "LocationName");
             List<TripSVM> tripSVMs = new List<TripSVM>();
@@ -76,7 +76,7 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
                 tripSVMs.Add(tripSVM);
             }
 
-            return View("_Trips",tripSVMs.ToPagedList(pageNumber, pageSize));
+            return View("_Trips", tripSVMs.ToPagedList(pageNumber, pageSize));
         }
 
 
@@ -117,11 +117,57 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var trip = db.Trips.Find(tripSchedule.TripID);
+                var timeuseds = db.TimeUseds.Where(t => t.VehicleID == trip.VehicleID).ToList();
+                var routes = db.Routes.Where(r => r.TripID == tripSchedule.TripID).ToList();
+                var mins = 0;
+                for (int i = 0; i < routes.Count; i++)
+                {
+                    if (trip.Stations.Count > 2)
+                    {
+                        mins = routes[0].Duration + (trip.Stations.Count - 2) * 7 + 45;
+                    }
+                    else
+                    {
+                        mins = routes[0].Duration;
+                    }
+                }
+
+                var check = true;
+                foreach (var timeused in timeuseds)
+                {
+                    if (timeused.Start <= tripSchedule.DepartureTime && timeused.End >= tripSchedule.DepartureTime)
+                    {
+                        ModelState.AddModelError("", "Vehicle of this trip is being used during this time!");
+                        check = false;
+                        ViewBag.TripID = new SelectList(db.Trips.Where(t => t.IsActive == true), "TripID", "CodeName", tripSchedule.TripID);
+                        return View(tripSchedule);
+                        break;
+                    }
+                }
+                foreach (var timeused in timeuseds)
+                {
+                    if (tripSchedule.DepartureTime.AddMinutes(mins) >= timeused.Start && tripSchedule.DepartureTime.AddMinutes(mins) <= timeused.End)
+                    {
+                        ModelState.AddModelError("", "Vehicle of this trip is being used during this time!");
+                        check = false;
+                        ViewBag.TripID = new SelectList(db.Trips.Where(t => t.IsActive == true), "TripID", "CodeName", tripSchedule.TripID);
+                        return View(tripSchedule);
+                        break;
+                    }
+                }
                 tripSchedule.TripScheduleCode = trip.CodeName + tripSchedule.DepartureTime.ToString("ddMMyyHHmm");
                 tripSchedule.Date = tripSchedule.DepartureTime.Date;
                 db.TripSchedules.Add(tripSchedule);
                 db.SaveChanges();
-                var routes = db.Routes.Where(r => r.TripID == tripSchedule.TripID).ToList();
+
+                TimeUsed time = new TimeUsed();
+                time.Start = tripSchedule.DepartureTime;
+                time.End = tripSchedule.DepartureTime.AddMinutes(mins);
+                time.VehicleID = tripSchedule.Trip.VehicleID;
+                time.TripScheduleID = tripSchedule.TripScheduleID;
+                db.TimeUseds.Add(time);
+                db.SaveChanges();
+
                 List<Route> newroutes = new List<Route>();
                 for (int i = 0; i < routes.Count - 1; i++)
                 {
@@ -169,8 +215,6 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
                     db.RouteSchedules.Add(routeSchedule);
                     db.SaveChanges();
                 }
-
-
                 return RedirectToAction("Index");
             }
 
@@ -207,6 +251,8 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
         {
             TripSchedule trip = db.TripSchedules.Find(id);
             db.TripSchedules.Remove(trip);
+            var timeused = db.TimeUseds.Find(trip.TripScheduleID);
+            db.TimeUseds.Remove(timeused);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

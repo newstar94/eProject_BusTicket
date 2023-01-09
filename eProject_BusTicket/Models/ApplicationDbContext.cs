@@ -27,7 +27,8 @@ namespace eProject_BusTicket.Models
         public DbSet<Station> Stations { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingTicket> BookingsTickets { get; set; }
-
+        public DbSet<TimeUsed> TimeUseds { get; set; }
+        
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();

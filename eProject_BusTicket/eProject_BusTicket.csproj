@@ -228,6 +228,7 @@
     <Compile Include="Models\Route.cs" />
     <Compile Include="Models\RouteSchedule.cs" />
     <Compile Include="Models\Station.cs" />
+    <Compile Include="Models\TimeUsed.cs" />
     <Compile Include="Models\Trip.cs" />
     <Compile Include="Models\TripSchedule.cs" />
     <Compile Include="Models\TypeofVehicle.cs" />

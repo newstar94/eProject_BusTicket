@@ -32,7 +32,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.TripID, "Trip", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-8">
-                        @Html.DropDownList("TripID", null, "Select Trip", htmlAttributes: new { @class = "form-control" })
+                        @Html.DropDownList("TripID", null, "Select Trip", htmlAttributes: new { @class = "form-control", @onchange= "Gettrip(this)" })
                         @Html.ValidationMessageFor(model => model.TripID, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.DepartureTime, htmlAttributes: new { @class = "control-label col-md-3" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.DepartureTime, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local", @min = DateTime.Now.ToString("yyyy-MM-dd HH:mm") } })
+                        @Html.EditorFor(model => model.DepartureTime, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local", @min = DateTime.Now.ToString("yyyy-MM-ddTHH:mm") } })
                         @Html.ValidationMessageFor(model => model.DepartureTime, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -109,8 +109,9 @@
 }
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
-    document.getElementById("TripID").onchange = function () {
-        var TripID = this.value;
+
+    function Gettrip() {
+        var TripID = document.getElementById("TripID").value;
         var url = '/Admin/TripSchedules/Gettrip';
         $.ajax({
             url: url,
@@ -136,4 +137,8 @@
             }
         });
     };
+
+    $(document).ready(function () {
+        Gettrip();
+    });
 </script>

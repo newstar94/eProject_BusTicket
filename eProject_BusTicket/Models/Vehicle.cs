@@ -25,5 +25,6 @@ namespace eProject_BusTicket.Models
         public int TypeID { get; set; }
         public virtual TypeofVehicle TypeofVehicle { get; set; }
         public ICollection<Trip> Trips { get; set; }
+        public ICollection<TimeUsed> TimeUsed { get; set; }
     }
 }
