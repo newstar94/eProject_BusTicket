@@ -44,7 +44,7 @@ namespace eProject_BusTicket
                 RequireUppercase = false,
             };
             // Configure user lockout defaults
-            manager.UserLockoutEnabledByDefault = true;
+            manager.UserLockoutEnabledByDefault = false;
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             manager.MaxFailedAccessAttemptsBeforeLockout = 5;
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
@@ -87,27 +87,26 @@ namespace eProject_BusTicket
             {
                 sendMail(message);
             });
-
         }
 
         void sendMail(IdentityMessage message)
         {
             #region formatter
             string text = string.Format("Please click on this link to {0}: {1}", message.Subject, message.Body);
-            string html = "Please confirm your account by clicking this link: <a href=\"" + message.Body + "\">link</a><br/>";
+            string html = "Please confirm your account by clicking this link:" + message.Body + "<br/>";
 
             html += HttpUtility.HtmlEncode(@"Or click on the copy the following link on the browser:" + message.Body);
             #endregion
 
             MailMessage msg = new MailMessage();
-            msg.From = new MailAddress(ConfigurationManager.AppSettings["Email"].ToString());
+            msg.From = new MailAddress("duongvtth2104009@fpt.edu.vn");
             msg.To.Add(new MailAddress(message.Destination));
             msg.Subject = message.Subject;
             msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(text, null, MediaTypeNames.Text.Plain));
             msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(html, null, MediaTypeNames.Text.Html));
 
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", Convert.ToInt32(587));
-            NetworkCredential credentials = new NetworkCredential(ConfigurationManager.AppSettings["Email"].ToString(), ConfigurationManager.AppSettings["Password"].ToString());
+            NetworkCredential credentials = new NetworkCredential("duongvtth2104009@fpt.edu.vn", "eemhbxykdxgwexms");
             smtpClient.Credentials = credentials;
             smtpClient.EnableSsl = true;
             smtpClient.Send(msg);

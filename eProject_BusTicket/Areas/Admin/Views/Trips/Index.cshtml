@@ -59,7 +59,7 @@
                 @Html.DisplayFor(modelItem => item.Trip.Destination)
             </td>
             <td>
-                @item.Routes.Max(r => r.Distance) km
+                @item.Routes[0].Distance km
             </td>
             <td>
                 @if (item.Stations.Count > 2)

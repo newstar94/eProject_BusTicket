@@ -52,18 +52,10 @@
             <div class="sub">We are here to help, before, during, and even after your trip.</div>
         </div>
     </div>
-
 </div>
-<script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
-    $("#Origin").on('change', function () {
-        $('#Destination').children().remove().end();
-        jQuery("#Origin option").each(function () {
-            if (jQuery(this).val() != $('#Origin').val()) {
-                if ($(this).val() != "") {
-                    $('#Destination').append('<option value=' + jQuery(this).val() + '>' + jQuery(this).text() + '</option>');
-                }
-            }
-        });
-    });
+    $(document).ready(function() {
+        var select = document.getElementsByTagName("select");
+        select.required = true;
+    })
 </script>

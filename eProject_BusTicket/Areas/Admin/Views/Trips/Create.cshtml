@@ -7,18 +7,17 @@
 <h2>Create Trip</h2>
 <div style="display: flex">
     <div class="col-md-6">
-        @using (Html.BeginForm())
-        {
+        <form>
             <div class="form-horizontal">
                 <hr />
                 <span id="error" class="text-danger"></span>
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <span class="text-danger">@ViewBag.Error</span>
+                <span class="text-danger">@ViewBag.Error</span>
                 @*Chọn xe*@
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Trip.VehicleID, "VehicleID", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Trip.VehicleID, "Vehicle", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.DropDownList("VehicleID", ViewBag.VehicleID as SelectList,"Select Vehicle", htmlAttributes: new { @class = "form-control" })
+                        @Html.DropDownList("VehicleID", ViewBag.VehicleID as SelectList, "Select Vehicle", htmlAttributes: new { @class = "form-control", @required = "required" })
                         @Html.ValidationMessageFor(model => model.Trip.VehicleID, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -65,7 +64,7 @@
                 </ol>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input id="create" type="button" value="Create" class="btn btn-success" />
+                        <input id="create" type="button" value="Create" class="btn btn-success" onclick="createtrip()" />
                     </div>
                 </div>
 
@@ -79,9 +78,9 @@
                         <th>Distance</th>
                     </tr>
                 </thead>
-                <tbody id="myTable"></tbody>
+                <tbody id="route_table"></tbody>
             </table>
-        }
+        </form>
     </div>
 
 
@@ -107,27 +106,14 @@
     </div>
 </div>
 
-
-
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-}
-<script src="~/Scripts/jquery-3.4.1.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuogEBliY0VtBWKhRmZ-nkNCwPt1ovgeE&libraries=places&callback=initMap&v=weekly"></script>
-<script type="text/javascript">
-    $("#Origin").on('change', function () {
-        $('#Destination').children().remove().end();
-        jQuery("#Origin option").each(function () {
-            if (jQuery(this).val() != $('#Origin').val()) {
-                if ($(this).val() != "") {
-                    $('#Destination').append('<option value=' + jQuery(this).val() + '>' + jQuery(this).text() + '</option>');
-                }
-            }
-        });
-    });
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuogEBliY0VtBWKhRmZ-nkNCwPt1ovgeE&libraries=places&callback=initMap&v=weekly"></script>
+    <script type="text/javascript">
+
     const options = {
         componentRestrictions: { country: "vn" },
     }
@@ -171,116 +157,105 @@
         });
 
     const createbt = document.getElementById("create");
-    createbt.addEventListener('mouseover',
-        function () {
-            var table = document.getElementById("myTable");
-            var rows = table.rows.length;
-            for (var i = rows - 1; i >= 0; i--) {
-                table.deleteRow(i);
-            }
 
-            //Tạo Array Stations mới trong tripvm và gán giá trị
-            var stations = new Array();
-            var stationlist = document.querySelectorAll(".station");
-            for (var i = 0; i < stationlist.length; i++) {
-                stations.push(stationlist[i].innerText.substring(0, stationlist[i].innerText.length - 6));
-            }
-
-            //tạo wayponits gg map
-            var waypts = [];
-            for (var i = 1; i < stations.length - 1; i++) {
-                var waypt = new Object();
-                waypt.location = stations[i];
-                waypt.stopover = true;
-                waypts.push(waypt);
-            }
-            // tạo dịch vụ ggmap
-            var directionsService = new google.maps.DirectionsService();
-            directionsService.route({
-                origin: stations[0],
-                destination: stations[stations.length - 1],
-                travelMode: google.maps.TravelMode.DRIVING,
-                unitSystem: google.maps.UnitSystem.METRIC,
-                waypoints: waypts,
-                avoidFerries: true,
-                avoidHighways: true,
-                avoidTolls: false,
-            })
-                .then((response) => {
-                    const route = response.routes[0];
-                    for (let i = 0; i < route.legs.length; i++) {
-                        var newRow = table.insertRow(-1);
-                        var startCell = newRow.insertCell(0);
-                        startCell.classList.add("start");
-                        var endCell = newRow.insertCell(1);
-                        endCell.classList.add("end");
-                        var durationCell = newRow.insertCell(2);
-                        durationCell.classList.add("duration");
-                        var distanceCell = newRow.insertCell(3);
-                        distanceCell.classList.add("distance");
-                        startCell.innerHTML = stations[i];
-                        endCell.innerHTML = stations[i + 1];
-                        durationCell.innerHTML = (route.legs[i].duration.value / 60).toFixed(0);
-                        var distance = (route.legs[i].distance.value / 1000).toFixed(1);
-                        distanceCell.innerHTML = distance;
-                    }
-                })
-        });
-
-
-    createbt.addEventListener('click', function () {
-        setTimeout(function () {
+    function createtrip() {
+        var table = document.getElementById("route_table");
+      var rows = table.rows.length;
+      for (var i = rows - 1; i >= 0; i--) {
+        table.deleteRow(i);
+      }
+      //Tạo Array Stations mới trong tripvm và gán giá trị
+      var stations = new Array();
+      var stationlist = document.querySelectorAll(".station");
+      for (var i = 0; i < stationlist.length; i++) {
+        stations.push(stationlist[i].innerText.substring(0, stationlist[i].innerText.length - 6));
+      }
+      //tạo wayponits gg map
+      var waypts = [];
+      for (var i = 1; i < stations.length - 1; i++) {
+        var waypt = new Object();
+        waypt.location = stations[i];
+        waypt.stopover = true;
+        waypts.push(waypt);
+      }
+      // tạo dịch vụ ggmap
+      var directionsService = new google.maps.DirectionsService();
+      directionsService.route({
+        origin: stations[0],
+        destination: stations[stations.length - 1],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        waypoints: waypts,
+        avoidFerries: true,
+        avoidHighways: true,
+        avoidTolls: false,
+      })
+        .then((response) => {
+          const route = response.routes[0];
+          for (let i = 0; i < route.legs.length; i++) {
+            var newRow = table.insertRow(-1);
+            var startCell = newRow.insertCell(0);
+            startCell.classList.add("start");
+            var endCell = newRow.insertCell(1);
+            endCell.classList.add("end");
+            var durationCell = newRow.insertCell(2);
+            durationCell.classList.add("duration");
+            var distanceCell = newRow.insertCell(3);
+            distanceCell.classList.add("distance");
+            startCell.innerHTML = stations[i];
+            endCell.innerHTML = stations[i + 1];
+            durationCell.innerHTML = (route.legs[i].duration.value / 60).toFixed(0);
+            var distance = (route.legs[i].distance.value / 1000).toFixed(1);
+            distanceCell.innerHTML = distance;
+          };
+        })
+        .then(
+          function() {
             var tripvm = new Object();
-
             var trip = new Object();
             trip.VehicleID = $("#VehicleID option:selected").val();
             trip.CodeName = document.getElementById("CodeName").value;
             trip.Origin = $("#Origin option:selected").text();
             trip.Destination = $("#Destination option:selected").text();
             tripvm.Trip = trip;
-
             var stations = new Array();
             var stationlist = document.querySelectorAll(".station");
             for (var i = 0; i < stationlist.length; i++) {
-                station = new Object();
-                station.StationAdress = (stationlist[i].innerText.substring(0, stationlist[i].innerText.length - 6));
-                stations.push(station);
+              station = new Object();
+              station.StationAdress = (stationlist[i].innerText.substring(0, stationlist[i].innerText.length - 6));
+              stations.push(station);
             }
             tripvm.Stations = stations;
-
             var distance = document.querySelectorAll(".distance");
             var duration = document.querySelectorAll(".duration");
             var routes = new Array();
             for (var i = 0; i < distance.length; i++) {
-                var route = new Object();
-                route.Start = stations[i].StationAdress;
-                route.End = stations[i + 1].StationAdress;
-                route.Distance = distance[i].textContent * 1;
-                route.Duration = duration[i].textContent * 1;
-                routes.push(route);
+              var route = new Object();
+              route.Start = stations[i].StationAdress;
+              route.End = stations[i + 1].StationAdress;
+              route.Distance = distance[i].textContent * 1;
+              route.Duration = duration[i].textContent * 1;
+              routes.push(route);
             }
             tripvm.Routes = routes;
             $.ajax({
-                type: "POST",
-                url: "/Trips/Create",
-                data: JSON.stringify(tripvm),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function () {
-                    window.location.href = '@Url.Action("Index")';
-                },
-                fail: function(){
-                    window.location.href = '@Url.Action("Create")';
-                },
-                statusCode: {
-                    500: function() {
-                        document.getElementById("error").innerHTML = "Trip code has exist!";
-                    }
+              type: "POST",
+              url: "/Trips/Create",
+              data: JSON.stringify(tripvm),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              success: function () {
+                window.location.href = '@Url.Action("Index")';
+              },
+              statusCode: {
+                500: function () {
+                  document.getElementById("error").innerHTML = "Trip code has exist!";
                 }
+              }
             });
-        }, 1200);  // the function will be executed after 1000 milliseconds (1 second)
-    });
-
+          }
+        );
+    }
 
     document.getElementById("VehicleID").onchange = function () {
         var VehicleID = this.value;
@@ -300,5 +275,5 @@
         });
     };
 
-
-</script>
+    </script>
+}

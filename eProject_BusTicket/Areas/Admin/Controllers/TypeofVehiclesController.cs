@@ -36,9 +36,9 @@ namespace eProject_BusTicket.Areas.Admin.Controllers
             var types = db.TypeofVehicles.ToList();
             foreach (var type in types)
             {
-                if (type.Name.ToLower() == type.Name.ToLower())
+                if (type.Name.ToLower() == typeofVehicle.Name.ToLower())
                 {
-                    ModelState.AddModelError("", "Location has exist!");
+                    ModelState.AddModelError("", "Type of Vehicle has exist!");
                     check = false;
                     break;
                 }

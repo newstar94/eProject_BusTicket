@@ -124,11 +124,11 @@ namespace eProject_BusTicket.Controllers
                     await UserManager.SetLockoutEnabledAsync(user.Id, false);
                     await UserManager.AddToRoleAsync(user.Id, role.Name);
                     var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    ViewBag.Noti = "Please check your email and confirm your email address!";
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code },
                         protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking this <a href=" + callbackUrl + ">link</a>");
                     ViewBag.Link = callbackUrl;
-                    ViewBag.Noti = "Please check your email and confirm your email address!";
                     return View("_Register");
                 }
                 AddErrors(result);
@@ -178,7 +178,7 @@ namespace eProject_BusTicket.Controllers
 
                 var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                //await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
                 ViewBag.Link = callbackUrl;
                 return View("_ForgotPassword");
             }
