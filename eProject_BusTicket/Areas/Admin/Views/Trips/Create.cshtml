@@ -122,6 +122,15 @@
         document.getElementById("station"),
         options
     );
+    const addStationbt = document.getElementById("addStation");
+    const addStationip = document.getElementById("station");
+        addStationbt.addEventListener('click', addStation);
+        addStationip.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+            addStation();
+        }
+    });
 
     function addStation() {
         var station = document.getElementById("station").value;
@@ -139,32 +148,20 @@
             li.appendChild(deleteButton);
             document.getElementById("stationlist").appendChild(li);
             document.getElementById("station").value = "";
-            document.getElementById("alert").innerHTML = "";
+            document.getElementById("alert").value = "";
         } else {
             document.getElementById("alert").innerHTML = "Vui lòng nhập trạm dừng";
         }
-    }
-
-    const addStationbt = document.getElementById("addStation");
-    const addStationip = document.getElementById("station");
-    addStationbt.addEventListener('click', addStation);
-    addStationip.addEventListener("keydown",
-        function (event) {
-            if (event.keyCode == '13') {
-                event.preventDefault();
-                addStation();
-            }
-        });
+    };
 
     const createbt = document.getElementById("create");
-
     function createtrip() {
-        var table = document.getElementById("route_table");
-      var rows = table.rows.length;
-      for (var i = rows - 1; i >= 0; i--) {
-        table.deleteRow(i);
-      }
-      //Tạo Array Stations mới trong tripvm và gán giá trị
+        var vehicle = document.getElementById("VehicleID").value;
+        if(vehicle==""){
+            document.getElementById("error").innerHTML = "Please choose vehicle!";
+        }else{
+            var table = document.getElementById("route_table");
+      //Tạo Array Stations mới trong tripvm và gán giá trị;
       var stations = new Array();
       var stationlist = document.querySelectorAll(".station");
       for (var i = 0; i < stationlist.length; i++) {
@@ -255,9 +252,11 @@
             });
           }
         );
-    }
+        }
+    };
 
     document.getElementById("VehicleID").onchange = function () {
+        document.getElementById("error").innerHTML = "";
         var VehicleID = this.value;
         var url = '/Vehicles/Getvehicle';
         $.ajax({
